@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzw.base.dao.BaseDao">
+    <!-- 日志 -->
+    <resultMap type="com.zzw.base.entity.OperatorLog" id="operatorLogMapper">
+        <id column="id" property="id"/>
+        <result column="create_date" property="createDate"/>
+        <result column="modify_date" property="modifyDate"/>
+        <result column="operation" property="operation"/>
+        <result column="operator" property="operator"/>
+        <result column="content" property="content"/>
+        <result column="parameter" property="parameter"/>
+        <result column="ip" property="ip"/>
+    </resultMap>
+    <!-- 新增操作日志 -->
+    <insert id="addOperatorLog" parameterType="com.zzw.base.entity.OperatorLog"
+            useGeneratedKeys="true" keyProperty="id">
+		insert into t_operator_log
+			(operation,operator,content,parameter,ip,create_date)
+		values(#{operation}, #{operator},#{content},#{parameter},#{ip}, SYSDATE())
+	</insert>
+    <!-- 查询操作日志列表 -->
+    <select id="selectOperatorLogPage" parameterType="map"
+            resultType="com.zzw.base.entity.OperatorLog" resultMap="operatorLogMapper">
+        SELECT * FROM t_operator_log where 1=1
+        <if test="operator != null and operator != '' ">
+            and operator like CONCAT(CONCAT('%', #{operator}),'%')
+        </if>
+        <if test="startDate != null">
+            and create_date <![CDATA[ >= ]]> #{startDate}
+        </if>
+        <if test="endDate != null">
+            and create_date <![CDATA[ <= ]]> #{endDate}
+        </if>
+        order by create_date desc
+    </select>
+    <!-- 删除操作日志 -->
+    <delete id="deleteOperatorLog" parameterType="com.zzw.base.entity.OperatorLog">
+		delete from t_operator_log where id = #{id};
+	</delete>
+
+    <delete id="optLog_deleteIds" parameterType="com.zzw.base.entity.OperatorLog" >
+        delete from t_operator_log WHERE id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <!-- 查询操作日志 -->
+    <select id="selectOperatorLogById" parameterType="java.lang.Long"
+            resultType="com.zzw.base.entity.OperatorLog" resultMap="operatorLogMapper">
+        SELECT * FROM t_operator_log where id=#{id}
+    </select>
+</mapper>

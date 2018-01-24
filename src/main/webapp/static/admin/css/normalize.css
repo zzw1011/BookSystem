@@ -1,0 +1,160 @@
+/*
+  normalize.css
+*/
+
+
+html, body, input {
+  padding: 0;
+  margin: 0;
+  font-family: "Droid Sans Fallback", "Microsoft YaHei", "Heiti SC";
+}
+
+body, a, img, label, button, input, textarea, select {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+input {
+  border: none;
+  outline: none;
+  border-radius: 0;
+}
+
+body {
+  -webkit-text-size-adjust: none;
+  /*-webkit-user-select: none;*/
+  /*overflow: hidden;*/
+}
+
+
+/* add lilian */
+
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, form,
+input, select, option, p, th, td, a, span, i, b, em, textarea {
+  padding: 0;
+  margin: 0;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+button, input, textarea {
+  font-family: inherit;
+  color: inherit;
+  -webkit-appearance: none;
+}
+input[type="radio"]{
+	-webkit-appearance: radio;
+    box-sizing: border-box;
+}
+input[type="checkbox"] {
+    -webkit-appearance: checkbox;
+    box-sizing: border-box;
+}
+
+/*select::-ms-expand {
+  display: none;
+}*/
+
+select:focus, select:active {
+  background-color: transparent;
+}
+
+input[type=text]::-ms-clear, input[type=tel]::-ms-clear, input[type=number]::-ms-clear {
+  display: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+input::-webkit-input-placeholder {
+  color: #9a9a9a;
+  line-height: 130%;
+}
+
+input:focus {
+  outline: none;
+}
+
+a, img {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+}
+
+i, b, em {
+  font-style: normal;
+  font-weight: normal;
+}
+
+
+
+a {
+	color: #000;
+  text-decoration: none;
+}
+
+li, ol, ul {
+  list-style-type: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+font-size: 100%;
+}
+.fl {
+	float: left;
+	display: inline;
+}
+
+.fr {
+	float: right;
+	display: inline;
+}
+.f_w{
+	font-weight: bold;
+}
+.clearfix:after {  content: "."; display: block;clear: both; visibility: hidden; line-height: 0;height: 0; font-size:0;}
+.clearfix { *zoom:1;} 
+
+.hide {
+	display: none;
+}
+
+.mt10 {
+	margin-top: 10px;
+}
+
+.mt20 {
+	margin-top: 20px;
+}
+
+.tc {
+	text-align: center;
+}
+
+.tr {
+	text-align: right;
+}
+
+.tl {
+	text-align: left;
+}
+
+.box-flex {
+	display: -ms-flexbox;
+	display: -webkit-box;
+	display: box;
+}
+
+.box-flex-item {
+	-webkit-box-flex: 1;
+	-ms-flex: 1 auto;
+	width: 1px;
+	display: block;
+}

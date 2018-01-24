@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+    <diskStore path="user.home/cache" />
+
+    <!--eternal true:永不过期,false: timeToLiveSeconds时间后过期-->
+    <defaultCache  maxElementsInMemory="100" timeToLiveSeconds="1800" eternal="false" overflowToDisk="false" />
+    <cache name="sysParamCache" maxElementsInMemory="100" eternal="true" overflowToDisk="true" />
+    <cache name="categoryCache" maxElementsInMemory="100" eternal="true" overflowToDisk="true" />
+    <cache name="dictionaryCache" maxElementsInMemory="100" eternal="true" overflowToDisk="true" />
+    <cache name="smsCodeCache" maxElementsInMemory="100" timeToLiveSeconds="300" overflowToDisk="false" />
+</ehcache>

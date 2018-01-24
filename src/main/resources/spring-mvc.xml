@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+    <!-- 启用CGliB -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/admin/**" />
+            <bean id="operatorLogInterceptor" class="com.zzw.base.interceptor.OperatorLogInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!-- 自动扫描且只扫描@Controller -->
+    <context:component-scan base-package="com.zzw.*" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="false">
+            <!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8"/>
+            </bean>
+            <ref bean="jacksonMessageConverter"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <bean id="jacksonMessageConverter"
+          class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/html;charset=UTF-8</value>
+                <value>application/json;charset=UTF-8</value>
+            </list>
+        </property>
+        <property name="objectMapper" ref="objectMapper"/>
+    </bean>
+
+    <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">
+        <property name="timeZone">
+            <bean class="java.util.TimeZone" factory-method="getTimeZone">
+                <constructor-arg value="GMT+08"/>
+            </bean>
+        </property>
+        <property name="dateFormat">
+            <bean class="java.text.SimpleDateFormat">
+                <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss"/>
+            </bean>
+        </property>
+    </bean>
+    <!-- 定义JSP文件的位置 -->
+    <bean id="viewResolverCommon" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <bean id="viewResolverFtl" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <!-- 使用什么方式解析视图 -->
+        <property name="viewClass"
+                  value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"></property>
+        <property name="order" value="1"></property>
+        <!-- 视图文件的后缀 -->
+        <property name="suffix" value=".ftl"></property>
+        <property name="contentType" value="text/html;charset=UTF-8"></property>
+        <!--此变量为pageContext.request,页面使用方法：rc.contextPath -->
+        <property name="requestContextAttribute" value="rc"></property>
+    </bean>
+
+    <!-- 配置哪些是静态资源，缺省Servlet 直接返回 -->
+    <mvc:resources mapping="/static/**" location="/static/" cache-period="31556926"/>
+</beans>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzw.base.dao.BaseDao">
+    <resultMap id="roleResultMap" type="com.zzw.base.entity.RoleEntity">
+        <id property="roleId" column="role_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="roleRemark" column="role_remark"/>
+    </resultMap>
+
+    <resultMap id="roleEntityResultMap" type="com.zzw.base.model.RoleModelEntity">
+        <id property="roleId" column="role_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="roleRemark" column="role_remark"/>
+        <collection property="permissionList" resultMap="permissionMapper"/>
+    </resultMap>
+
+    <resultMap id="permissionMapper" type="com.zzw.base.entity.RolePermissionEntity" >
+        <result column="per_code" property="perCode"/>
+    </resultMap>
+
+    <!-- 查询角色 -->
+    <select id="selRole" resultType="com.zzw.base.entity.RoleEntity"
+            resultMap="roleResultMap">
+        SELECT * FROM t_role
+        where 1=1
+        <if test="roleName != null and roleName != '' ">
+            and role_name like CONCAT(CONCAT('%', #{roleName}),'%')
+        </if>
+    </select>
+
+    <!--根据用户ID查询角色 -->
+    <select id="selectRoleByUserId" resultType="com.zzw.base.model.RoleModelEntity"
+            resultMap="roleEntityResultMap" parameterType="Long">
+        select * from t_user_role ur
+        INNER JOIN t_role r ON ur.role_id=r.role_id
+        INNER JOIN t_role_permission rp ON r.role_id=rp.role_id
+        where ur.user_id=#{userId}
+    </select>
+
+
+
+    <!-- 新增角色 -->
+    <insert id="addRole" parameterType="com.zzw.base.entity.RoleEntity"
+            useGeneratedKeys="true" keyProperty="roleId">
+        insert into
+        t_role(role_name,role_remark)values(#{roleName}, #{roleRemark})
+    </insert>
+
+    <!-- 修改角色 -->
+    <update id="updateRole" parameterType="com.zzw.base.entity.RoleEntity"
+            useGeneratedKeys="true" keyProperty="roleId">
+        update t_role set role_name =
+        #{roleName},
+        role_remark=#{roleRemark}
+        where role_id = #{roleId};
+    </update>
+    <!-- 删除角色 -->
+
+    <delete id="deleteRole" parameterType="java.lang.Long">
+        delete from t_role
+        where role_id = #{roleId};
+    </delete>
+
+</mapper>

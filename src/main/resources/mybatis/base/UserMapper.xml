@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzw.base.dao.BaseDao">
+    <!-- 用户关系 -->
+    <resultMap type="com.zzw.base.entity.UserEntity" id="userMapper">
+        <id column="id" property="id"/>
+        <result column="user_name" property="userName"/>
+        <result column="real_name" property="realName"/>
+        <result column="user_password" property="userPassword"/>
+        <result column="failure_count" property="failureCount"/>
+        <result column="login_date" property="loginDate"/>
+        <result column="is_locked" property="isLocked"/>
+        <result column="locked_date" property="lockedDate"/>
+        <result column="createDate" property="createDate"/>
+        <result column="modifyDate" property="modifyDate"/>
+        <result column="login_ip" property="loginIp"/>
+        <result column="phone_number" property="phoneNumber"/>
+        <result column="gender" property="gender"/>
+        <result column="email" property="email"/>
+        <result column="roleName" property="roleName"/>
+    </resultMap>
+
+    <!--查询所有用户，连表查出角色，权限-->
+    <select id="selectUser" resultType="com.zzw.base.entity.UserEntity">
+        select * from t_user u
+        LEFT JOIN t_user_role ur ON u.id=ur.userId
+        LEFT JOIN t_role r ON ur.roleId=r.roleId
+        LEFT JOIN t_role_permission rp ON rp.roleId=r.roleId
+    </select>
+
+    <select id="selectUserById" resultType="com.zzw.base.entity.UserEntity" parameterType="java.lang.Long">
+        select * from t_user
+        WHERE id=#{id}
+    </select>
+
+    <!-- id-->
+    <select id="seleUserId" resultMap="userMapper" parameterType="java.lang.String">
+        select id from t_user u WHERE u.`user_name`=#{userName}
+    </select>
+
+    <select id="selectRolesByUserName" resultMap="userMapper"
+            parameterType="java.lang.String">
+        SELECT u.id,u.user_name,r.role_Name as roleName  FROM t_user u
+        JOIN t_user_role ur on u.id = ur.user_id
+        JOIN t_role r on  r.role_id = ur.role_id
+        WHERE u.user_name=#{userName}
+    </select>
+
+
+    <!--按姓名查询用户-->
+    <select id="selectUserByUserName" resultType="com.zzw.base.entity.UserEntity" parameterType="java.lang.String">
+        select * from t_user
+        WHERE user_name=#{userName}
+    </select>
+
+    <!--添加用户-->
+    <insert id="addUser" parameterType="com.zzw.base.entity.UserEntity" useGeneratedKeys="true" keyProperty="id">
+        insert INTO t_user
+        (
+         user_name,
+		 user_password,
+		 phone_number,
+		 gender,
+		 email,
+		 real_name,
+		 createDate
+		 )
+		values
+		(
+		 #{userName},
+		 #{userPassword},
+		 #{phoneNumber},
+		 #{gender},
+		 #{email},
+		 #{realName},
+		 SYSDATE()
+		 )
+    </insert>
+
+    <!--更新用户-->
+    <update id="updateUser"  parameterType="com.zzw.base.entity.UserEntity" useGeneratedKeys="true" keyProperty="id">
+        UPDATE t_user SET user_password=
+        #{userPassword}
+        <if test="phoneNumber != '' || phoneNumber !=null ">
+            phone_number = #{phoneNumber},
+        </if>
+        <if test="gender != '' || gender !=null">
+            gender = #{gender},
+        </if>
+         <if test="email != '' || email !=null">
+             email = #{email},
+         </if>
+         <if test="realName != '' || realName !=null">
+             real_name = #{realName},
+         </if>
+            modifyDate = SYSDATE()
+        WHERE id=#{id}
+    </update>
+
+    <!--删除用户-->
+    <delete id="deleteUser" parameterType="int">
+        delete from t_user
+        where id = #{id};
+    </delete>
+
+    <!-- 登录成功修改登录时间 -->
+    <update id="upLoginDate" parameterType="com.zzw.base.entity.UserEntity">
+        update t_user set login_date=SYSDATE() where user_name=#{userName}
+    </update>
+
+    <!-- 登录成功修改登录IP -->
+    <update id="upLoginIp" parameterType="com.zzw.base.entity.UserEntity">
+        update t_user set login_ip=#{loginIp} where user_name=#{userName}
+    </update>
+
+    <!-- 登录时修改失败次数 -->
+    <update id="upFailCount" parameterType="com.zzw.base.entity.UserEntity">
+        update t_user set failure_count=#{failureCount} where user_name=#{userName}
+    </update>
+    <!-- 登录时失败5次修改锁定状态 -->
+    <update id="upIsLocked" parameterType="com.zzw.base.entity.UserEntity">
+        update t_user set is_locked=#{isLocked}, locked_date=SYSDATE(),failure_count = 0 where user_name=#{userName}
+    </update>
+
+</mapper>

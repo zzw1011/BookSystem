@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzw.base.dao.BaseDao">
+    <resultMap id="DictionaryMap" type="com.zzw.base.entity.DictionaryEntity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate"/>
+        <result column="dictionary_key" jdbcType="VARCHAR" property="dictionaryKey"/>
+        <result column="bewrite" jdbcType="VARCHAR" property="bewrite"/>
+        <association property="createUser" column="create_user"
+                     javaType="com.zzw.base.entity.UserEntity">
+            <result column="id" property="id"/>
+            <result column="user_name" property="userName"/>
+            <result column="failure_count" property="failureCount"/>
+        </association>
+        <association property="updateUser" column="modify_user"
+                     javaType="com.zzw.base.entity.UserEntity">
+            <result column="id" property="id"/>
+            <result column="user_name" property="userName"/>
+            <result column="failure_count" property="failureCount"/>
+        </association>
+    </resultMap>
+
+    <select id="dictionarySelectByPrimaryKey" parameterType="java.lang.Long"
+            resultMap="DictionaryMap">
+        SELECT a.*
+        FROM
+        t_dictionary a
+        where a.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 查询dictionary -->
+    <select id="queryDictionary" resultType="com.zzw.base.entity.DictionaryEntity"
+            resultMap="DictionaryMap">
+        SELECT *
+        FROM
+        t_dictionary
+        where 1=1
+        <if test="dictionaryKey != null and dictionaryKey != '' ">
+            and dictionary_key like
+            CONCAT(CONCAT('%',#{dictionaryKey}),'%')
+        </if>
+        order by create_date desc
+    </select>
+    <!-- 检查value是否存在 -->
+    <select id="checkKey" resultType="java.lang.Long">
+        SELECT count(a.id) FROM
+        t_dictionary a where a.dictionary_key =#{dictionaryKey}
+    </select>
+
+    <select id="dic_selectByKey" resultType="com.zzw.base.entity.DictionaryEntity" resultMap="DictionaryMap">
+        SELECT * FROM
+        t_dictionary a where a.dictionary_key = #{dictionaryKey}
+    </select>
+
+    <delete id="dictionaryDeleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        t_dictionary
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="dictionaryInsert" parameterType="com.zzw.base.entity.DictionaryEntity">
+        insert into t_dictionary (id,
+        create_date, create_user,
+        modify_date, modifyUser, dictionary_key,
+        bewrite)
+        values (#{id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP},
+        #{createUser.id,jdbcType=BIGINT},
+        #{modifyDate,jdbcType=TIMESTAMP},
+        #{updateUser.id,jdbcType=BIGINT}, #{dictionaryKey,jdbcType=VARCHAR},
+        #{bewrite,jdbcType=VARCHAR})
+    </insert>
+    <insert id="dictionaryInsertSelective" parameterType="com.zzw.base.entity.DictionaryEntity">
+        insert into t_dictionary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="modifyDate != null">
+                modify_date,
+            </if>
+            <if test="updateUser != null">
+                modifyUser,
+            </if>
+            <if test="dictionaryKey != null">
+                dictionary_key,
+            </if>
+            <if test="bewrite != null">
+                bewrite,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                #{createUser.id,jdbcType=BIGINT},
+            </if>
+            <if test="modifyDate != null">
+                #{modifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser.id,jdbcType=BIGINT},
+            </if>
+            <if test="dictionaryKey != null">
+                #{dictionaryKey,jdbcType=VARCHAR},
+            </if>
+            <if test="bewrite != null">
+                #{bewrite,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="dictionaryUpdateByPrimaryKeySelective" parameterType="com.zzw.base.entity.DictionaryEntity">
+        update t_dictionary
+        <set>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser.id,jdbcType=BIGINT},
+            </if>
+            <if test="modifyDate != null">
+                modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                modifyUser = #{updateUser.id,jdbcType=BIGINT},
+            </if>
+            <if test="dictionaryKey != null">
+                dictionary_key = #{dictionaryKey,jdbcType=VARCHAR},
+            </if>
+            <if test="bewrite != null">
+                bewrite = #{bewrite,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="dictionaryUpdateByPrimaryKey" parameterType="com.zzw.base.entity.DictionaryEntity">
+        update
+        t_dictionary
+        set create_date = #{createDate,jdbcType=TIMESTAMP},
+        create_user = #{createUser.id,jdbcType=BIGINT},
+        modify_date =
+        #{modifyDate,jdbcType=TIMESTAMP},
+        modifyUser =
+        #{updateUser.id,jdbcType=BIGINT},
+        dictionary_key =
+        #{dictionaryKey,jdbcType=VARCHAR},
+        bewrite = #{bewrite,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

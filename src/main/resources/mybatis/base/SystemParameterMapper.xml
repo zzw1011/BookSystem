@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzw.base.dao.BaseDao">
+    <!-- 栏目 -->
+    <resultMap type="com.zzw.base.entity.SystemParameterEntity" id="systemParameterMapper">
+        <id column="id" property="id"/>
+        <result column="parameter_key" property="parameterKey"/>
+        <result column="parameter_value" property="parameterValue"/>
+        <result column="instruction" property="instruction"/> 
+        <result column="create_date" property="createDate"/>
+        <result column="modify_date" property="modifyDate"/>
+        <association property="createUser" column="create_user"
+                     javaType="com.zzw.base.entity.UserEntity">
+            <result column="id" property="id"/>
+            <result column="user_name" property="userName"/>
+            <result column="failure_count" property="failureCount"/>
+        </association>
+        <association property="updateUser" column="modify_user"
+                     javaType="com.zzw.base.entity.UserEntity">
+            <result column="id" property="id"/>
+            <result column="user_name" property="userName"/>
+            <result column="failure_count" property="failureCount"/>
+        </association>
+    </resultMap>
+
+    <select id="systemParameter_selectSystemParameter" resultType="com.zzw.base.entity.SystemParameterEntity"
+            resultMap="systemParameterMapper">
+        SELECT * 
+          FROM t_system_parameter 
+	  ORDER BY create_date DESC
+    </select>
+
+    <insert id="systemParameter_saveSystemParameter" parameterType="com.zzw.base.entity.SystemParameterEntity"
+            useGeneratedKeys="true" keyProperty="id">
+   INSERT INTO t_system_parameter
+               (parameter_key,
+                parameter_value,
+                instruction,
+                create_date,
+                create_user)
+        VALUES (#{parameterKey}, 
+                #{parameterValue},
+                #{instruction},
+                SYSDATE(),
+                #{createUser.id})
+    </insert>
+
+    <!-- 删除系统参数 -->
+    <delete id="systemParameter_deleteSystemParameters" parameterType="com.zzw.base.entity.SystemParameterEntity" >
+         DELETE FROM t_system_parameter 
+         WHERE id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+               #{item}
+        </foreach>
+    </delete>
+
+    <select id="systemParameter_selectSystemParameterByKey" parameterType="com.zzw.base.entity.SystemParameterEntity" resultType="com.zzw.base.entity.SystemParameterEntity"
+                     resultMap="systemParameterMapper">
+        SELECT *
+          FROM t_system_parameter 
+         WHERE 1=1
+		 <if test="parameterKey != null and parameterKey != '' ">
+          and parameter_key = #{parameterKey}
+		</if> 
+        ORDER BY create_date DESC
+    </select>
+
+   	<select id="systemParameter_selectSystemParameterById" parameterType="com.zzw.base.entity.SystemParameterEntity"
+            resultType="com.zzw.base.entity.SystemParameterEntity"
+                     resultMap="systemParameterMapper">
+        SELECT *
+          FROM t_system_parameter 
+         WHERE id=#{id} 
+      ORDER BY create_date DESC
+    </select>
+    
+
+    <update id="systemParameter_updateSystemParameter" parameterType="com.zzw.base.entity.SystemParameterEntity"
+            useGeneratedKeys="true" keyProperty="id">
+        UPDATE t_system_parameter 
+           SET parameter_key=#{parameterKey},
+               parameter_value=#{parameterValue},
+               instruction=#{instruction},
+               modify_user=#{updateUser.id},
+               modify_date=SYSDATE()
+         WHERE id = #{id};
+    </update>
+    <!-- 该方法使用场景为 环信保存token  create_date 作为到期时间使用-->
+    <insert id="systemParameterSavePart" parameterType="com.zzw.base.entity.SystemParameterEntity"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_system_parameter
+        (parameter_key,
+        parameter_value,
+        instruction,
+        create_date)
+        VALUES (#{parameterKey},
+        #{parameterValue},
+        #{instruction},
+        #{createDate})
+    </insert>
+    <!-- 该方法使用场景为 环信token 到期后 更新 create_date -->
+    <update id="systemParameterUpdatePart" parameterType="com.zzw.base.entity.SystemParameterEntity"
+            useGeneratedKeys="true" keyProperty="id">
+        UPDATE t_system_parameter
+        SET
+        parameter_value=#{parameterValue},
+        create_date=#{createDate}
+        WHERE parameter_key = #{parameterKey};
+    </update>
+</mapper>

@@ -1,0 +1,747 @@
+﻿// 职业分类四级联动
+var professionInit = function(_cmbSelect1, _cmbSelect2, _cmbSelect3, _cmbSelect4, defaultSelect1, defaultSelect2, defaultSelect3,defaultSelect4)
+{
+	var cmbSelect1 = document.getElementById(_cmbSelect1);
+	var cmbSelect2 = document.getElementById(_cmbSelect2);
+	var cmbSelect3 = document.getElementById(_cmbSelect3);
+	var cmbSelect4 = document.getElementById(_cmbSelect4);
+	
+	function cmbSelect(cmb, str)
+	{
+		for(var i=0; i<cmb.options.length; i++)
+		{
+			if(cmb.options[i].value == str)
+			{
+				cmb.selectedIndex = i;
+				return;
+			}
+		}
+	}
+	function cmbAddOption(cmb, str, obj)
+	{
+		var option = document.createElement("option");
+		cmb.options.add(option);
+		option.innerHTML = str;
+		option.value = str;
+		option.obj = obj;
+	}
+	
+	function changeSeverlist3(){
+		cmbSelect4.options.length = 0;
+		if(cmbSelect3.selectedIndex == -1)return;
+		var item = cmbSelect3.options[cmbSelect3.selectedIndex].obj;
+		for(var i=0; i<item.service4list.length; i++)
+		{
+			cmbAddOption(cmbSelect4, item.service4list[i], null);
+		}
+		cmbSelect(cmbSelect4, defaultSelect4);
+	}
+	
+	function changeSeverlist2()
+	{
+		cmbSelect3.options.length = 0;
+		if(cmbSelect2.selectedIndex == -1)return;
+		var item = cmbSelect2.options[cmbSelect2.selectedIndex].obj;
+		for(var i=0; i<item.service3list.length; i++)
+		{
+			cmbAddOption(cmbSelect3, item.service3list[i].name, item.service3list[i]);
+		}
+		cmbSelect(cmbSelect3, defaultSelect3);
+		changeSeverlist3();
+		cmbSelect3.onchange = changeSeverlist3;
+	}
+	function changeSeverlist1()
+	{
+		cmbSelect2.options.length = 0;
+		cmbSelect2.onchange = null;
+		if(cmbSelect1.selectedIndex == -1)return;
+		var item = cmbSelect1.options[cmbSelect1.selectedIndex].obj;
+		for(var i=0; i<item.service2list.length; i++)
+		{
+			cmbAddOption(cmbSelect2, item.service2list[i].name, item.service2list[i]);
+		}
+		cmbSelect(cmbSelect2, defaultSelect2);
+		changeSeverlist2();
+		cmbSelect2.onchange = changeSeverlist2;
+	}
+	
+	for(var i=0; i<service1list.length; i++)
+	{
+		cmbAddOption(cmbSelect1, service1list[i].name, service1list[i]);
+	}
+	cmbSelect(cmbSelect1, defaultSelect1);
+	changeSeverlist1();
+	cmbSelect1.onchange = changeSeverlist1;
+}
+
+var service1list = [
+{name:'请选择',service2list:[
+	{name:'请选择',service3list:[
+		{name:'请选择',service4list:['请选择']}
+	]}
+]},
+{name:'农、林、牧、鱼业',service2list:[
+	{name:'农业',service3list:[
+		{name:'谷物种植',service4list:['谷物种植','小麦种植','玉米种植','其它谷物种植']},
+		{name:'豆类、油料和薯类种植',service4list:['豆类种植','油料种植','薯类种植']},
+		{name:'棉、麻、糖、烟草种植',service4list:['棉花种植','麻类种植','糖料种植','烟草种植']},
+		{name:'蔬菜、食用菌及园艺作物种植',service4list:['蔬菜种植','食用菌种植','花卉种植','其他园艺作物种植']},
+		{name:'水果种植',service4list:['仁果类和核果类水果种植','葡萄种植','柑橘类种植','香蕉等亚热带水果种植','其他水果种植']},
+		{name:'坚果、含油果、香料和饮料作物种植',service4list:['坚果种植','含油果种植','香料作物种植','茶及其他饮料作物种植']},
+		{name:'中药材种植',service4list:['中药材种植']},
+		{name:'其他农业林业',service4list:['其他农业林业']}
+	]},
+	{name:'林业',service3list:[
+		{name:'林木育种和育苗',service4list:['林木育种','林木育苗']},
+		{name:'造林和更新',service4list:['造林和更新']},
+		{name:'森林经营和管护',service4list:['森林经营和管护']},
+		{name:'木材和竹材采运',service4list:['木材采运','竹材采运']},
+		{name:'林产品采集',service4list:['木竹材林产品采集','非木竹材林产品采集']}
+	]},
+	{name:'畜牧业',service3list:[
+		{name:'牲畜饲养',service4list:['牛的饲养','马的饲养','猪的饲养','羊的饲养','骆驼饲养','其他牲畜饲养']},
+		{name:'家禽饲养',service4list:['鸡的饲养','鸭的饲养','鹅的饲养','其他家禽饲养']},
+		{name:'狩猎和捕捉动物',service4list:['狩猎和捕捉动物']}
+	]},
+	{name:'渔业',service3list:[
+		{name:'水产养殖',service4list:['海水养殖','内陆养殖']},
+		{name:'水产捕捞',service4list:['海水捕捞','内陆捕捞']}
+	]},
+	{name:'农、林、牧、渔服务业',service3list:[
+		{name:'农业服务业',service4list:['农业机械服务','灌溉服务','农产品初加工服务','其他农业服务']},
+		{name:'林业服务业',service4list:['林业有害生物防治服务','森林防火服务','林产品初级加工服务','其他林业服务']},
+		{name:'畜牧服务业',service4list:['畜牧服务业']},
+		{name:'渔业服务业',service4list:['渔业服务业']}
+	]}
+]},
+{name:'住宿和餐饮业',service2list:[
+	{name:'住宿业',service3list:[
+		{name:'旅游饭店',service4list:['旅游饭店']},
+		{name:'一般旅馆',service4list:['一般旅馆']},
+		{name:'其他住宿业',service4list:['其他住宿业']}
+	]},
+	{name:'餐饮业',service3list:[
+		{name:'正餐服务',service4list:['正餐服务']},
+		{name:'快餐服务',service4list:['快餐服务']},
+		{name:'饮料及冷饮服务',service4list:['茶馆服务','咖啡馆服务','酒吧服务','其他饮料及冷饮服务']},
+		{name:'其他餐饮业',service4list:['小吃服务','餐饮配送服务','其他未列明餐饮业']}
+	]}
+]},
+{name:'国际组织',service2list:[
+	{name:'国际组织',service3list:[
+		{name:'国际组织',service4list:['国际组织']}
+	]},
+]},
+{name:'公共管理、社会保障和社会组织',service2list:[
+	{name:'中国共产党机关',service3list:[
+		{name:'中国共产党机关',service4list:['中国共产党机关']}
+	]},
+	{name:'国家机构',service3list:[
+		{name:'国家权力机构',service4list:['国家权力机构']},
+		{name:'国家行政机构',service4list:['综合事务管理机构','对外事务管理机构','公共安全管理机构','社会事务管理机构','经济事务管理机构','行政监督检查机构']},
+		{name:'人民法院和人民检察院',service4list:['人民法院','人民检察院']}
+	]},
+	{name:'人民政协、民主党派',service3list:[
+		{name:'人民政协',service4list:['人民政协']},
+		{name:'民主党派',service4list:['民主党派']}
+	]},
+	{name:'社会保障',service3list:[
+		{name:'社会保障',service4list:['社会保障']}
+	]},
+	{name:'群众团体、社会团体和其他成员组织',service3list:[
+		{name:'群众团体',service4list:['工会','妇联','共青团','其他群众团体']},
+		{name:'社会团体',service4list:['专业性团体','行业性团体','其他社会团']},
+		{name:'基金会',service4list:['基金会']},
+		{name:'宗教组织',service4list:['宗教组织']}
+	]},
+	{name:'基层群众自治组织',service3list:[
+		{name:'社区自治组织',service4list:['社区自治组织']},
+		{name:'村民自治组织',service4list:['村民自治组织']}
+	]}
+]},
+{name:'信息传输、软件和信息技术服务业',service2list:[
+	{name:'电信、广播电视和卫星传输服务',service3list:[
+		{name:'电信',service4list:['固定电信服务','移动电信服务','其他电信服务']},
+		{name:'广播电视传输服务',service4list:['有线广播电视传输服务','无线广播电视传输服务']},
+		{name:'卫星传输服务',service4list:['卫星传输服务']}
+	]},
+	{name:'互联网和相关服务',service3list:[
+		{name:'互联网接入及相关服务',service4list:['互联网接入及相关服务']},
+		{name:'互联网信息服务',service4list:['互联网信息服务']},
+		{name:'其他互联网服务',service4list:['其他互联网服务']}
+	]},
+	{name:'软件和信息技术服务业',service3list:[
+		{name:'软件开发',service4list:['软件开发']},
+		{name:'信息系统集成服务',service4list:['信息系统集成服务']},
+		{name:'信息技术咨询服务',service4list:['信息技术咨询服务']},
+		{name:'数据处理和存储服务',service4list:['数据处理和存储服务']},
+		{name:'集成电路设计',service4list:['集成电路设计']},
+		{name:'其他信息技术服务业',service4list:['数字内容服务','呼叫中心','其他未列明信息技术服务业']}
+	]}
+]},
+{name:'金融业',service2list:[
+	{name:'货币金融服务',service3list:[
+		{name:'中央银行服务',service4list:['中央银行服务']},
+		{name:'货币银行服务',service4list:['货币银行服务']},
+		{name:'非货币银行服务',service4list:['金融租赁服务','财务公司','典当','其他非货币银行服务']},
+		{name:'银行监管服务',service4list:['银行监管服务']}
+	]},
+	{name:'资本市场服务',service3list:[
+		{name:'证券市场服务',service4list:['证券市场管理服务,证券经纪交易服务,基金管理服务']},
+		{name:'期货市场服务',service4list:['期货市场管理服务,其他期货市场服务']},
+		{name:'证券期货监管服务',service4list:['证券期货监管服务']},
+		{name:'资本投资服务',service4list:['资本投资服务']},
+		{name:'其他资本市场服务',service4list:['其他资本市场服务']}
+	]},
+	{name:'保险业',service3list:[
+		{name:'人身保险',service4list:['人寿保险,健康和意外保险']},
+		{name:'财产保险',service4list:['财产保险']},
+		{name:'再保险',service4list:['再保险']},
+		{name:'养老金',service4list:['养老金']},
+		{name:'保险经纪与代理服务',service4list:['保险经纪与代理服务']},
+		{name:'保险监管服务',service4list:['保险监管服务']},
+		{name:'其他保险活动',service4list:['风险和损失评估,其他未列明保险活动']}
+	]},
+	{name:'其他金融业',service3list:[
+		{name:'金融信托与管理服务',service4list:['金融信托与管理服务']},
+		{name:'控股公司服务',service4list:['控股公司服务']},
+		{name:'非金融机构支付服务',service4list:['非金融机构支付服务']},
+		{name:'金融信息服务',service4list:['金融信息服务']},
+		{name:'其他未列明金融业',service4list:['其他未列明金融业']}
+	]}
+]},
+{name:'文化、体育和娱乐业',service2list:[
+	{name:'新闻和出版业',service3list:[
+		{name:'新闻业',service4list:['新闻业']},
+		{name:'出版业',service4list:['图书出版','报纸出版','期刊出版','音像制品出版','电子出版物出版','其他出版业']}
+	]},
+	{name:'文化艺术业',service3list:[
+		{name:'文艺创作与表演',service4list:['文艺创作与表演']},
+		{name:'艺术表演场馆',service4list:['艺术表演场馆']},
+		{name:'图书馆与档案馆',service4list:['图书馆','档案馆']},
+		{name:'文物及非物质文化遗产保护',service4list:['文物及非物质文化遗产保护']},
+		{name:'博物馆',service4list:['博物馆']},
+		{name:'烈士陵园、纪念馆',service4list:['烈士陵园、纪念馆']},
+		{name:'群众文化活动',service4list:['群众文化活动']},
+		{name:'其他文化艺术业',service4list:['其他文化艺术业']}
+	]},
+	{name:'体育',service3list:[
+		{name:'体育组织',service4list:['体育组织']},
+		{name:'体育场馆',service4list:['体育场馆']},
+		{name:'休闲健身活动',service4list:['休闲健身活动']},
+		{name:'其他体育',service4list:['其他体育']}
+	]},
+	{name:'娱乐业',service3list:[
+		{name:'室内娱乐活动',service4list:['歌舞厅娱乐活动','电子游艺厅娱乐活动','网吧活动','其他室内娱乐活动']},
+		{name:'游乐园',service4list:['游乐园']},
+		{name:'彩票活动',service4list:['彩票活动']},
+		{name:'文化、娱乐、体育经纪代理',service4list:['文化娱乐经纪人','体育经纪人','其他文化艺术经纪代理']},
+		{name:'其他娱乐业',service4list:['其他娱乐业']}
+	]},
+	{name:'广播、电视、电影和影视录音制作业',service3list:[
+		{name:'广播',service4list:['广播']},
+		{name:'电视',service4list:['电视']},
+		{name:'电影和影视节目制作',service4list:['电影和影视节目制作']},
+		{name:'电影和影视节目发行',service4list:['电影和影视节目发行']},
+		{name:'电影放映',service4list:['电影放映']},
+		{name:'录音制作',service4list:['录音制作']}
+	]}
+]},
+{name:'房地产业',service2list:[
+	{name:'房地产业',service3list:[
+		{name:'房地产开发经营',service4list:['房地产开发经营']},
+		{name:'物业管理',service4list:['物业管理']},
+		{name:'房地产中介服务',service4list:['房地产中介服务']},
+		{name:'自有房地产经营活动',service4list:['自有房地产经营活动']},
+		{name:'其他房地产业',service4list:['其他房地产业']}
+	]},
+]},
+{name:'租赁和商务服务业',service2list:[
+	{name:'租赁业',service3list:[
+		{name:'机械设备租赁',service4list:['汽车租赁','农业机械租赁','建筑工程机械与设备租赁','计算机及通讯设备租赁','其他机械与设备租赁']},
+		{name:'文化及日用品出租',service4list:['娱乐及体育设备出租','图书出租','音像制品出租','其他文化及日用品出租']}
+	]},
+	{name:'商务服务业',service3list:[
+		{name:'企业管理服务',service4list:['企业总部管理','投资与资产管理','单位后勤管理服务','其他企业管理服务']},
+		{name:'法律服务',service4list:['律师及相关法律服务','公证服务','其他法律服务']},
+		{name:'咨询与调查',service4list:['会计、审计及税务服务','市场调查','社会经济咨询','其他专业咨询']},
+		{name:'广告业',service4list:['广告业']},
+		{name:'知识产权服务',service4list:['知识产权服务']},
+		{name:'人力资源服务',service4list:['公共就业服务','职业中介服务','劳务派遣服务','其他人力资源服务']},
+		{name:'旅行社及相关服务',service4list:['旅行社服务','旅游管理服务','其他旅行社相关服务']},
+		{name:'安全保护服务',service4list:['安全服务','安全系统监控服务','其他安全保护服务']},
+		{name:'其他商务服务业',service4list:['市场管理','会议及展览服务','包装服务','办公服务','信用服务','担保服务','其他未列明商务服务业']}
+	]}
+]},
+{name:'科学研究和技术服务业',service2list:[
+	{name:'研究和试验发展',service3list:[
+		{name:'自然科学研究和试验发展',service4list:['自然科学研究和试验发展']},
+		{name:'工程和技术研究和试验发展',service4list:['工程和技术研究和试验发展']},
+		{name:'农业科学研究和试验发展',service4list:['农业科学研究和试验发展']},
+		{name:'医学研究和试验发展',service4list:['医学研究和试验发展']},
+		{name:'社会人文科学研究',service4list:['社会人文科学研究']}
+	]},
+	{name:'专业技术服务业',service3list:[
+		{name:'气象服务',service4list:['气象服务']},
+		{name:'地震服务',service4list:['地震服务']},
+		{name:'海洋服务',service4list:['海洋服务']},
+		{name:'测绘服务',service4list:['测绘服务']},
+		{name:'质检技术服务',service4list:['质检技术服务']},
+		{name:'环境与生态监测',service4list:['环境保护监测','生态监测']},
+		{name:'地质勘查',service4list:['能源矿产地质勘查','固体矿产地质勘查','水、二氧化碳等矿产地质勘查','基础地质勘查','地质勘查技术服务']},
+		{name:'工程技术',service4list:['工程管理服务','工程勘察设计','规划管理']},
+		{name:'其他专业技术服务业',service4list:['专业化设计服务','摄影扩印服务','兽医服务','其他未列明专业技术服务业']}
+	]},
+	{name:'科技推广和应用服务业',service3list:[
+		{name:'技术推广服务',service4list:['农业技术推广服务','生物技术推广服务','新材料技术推广服务','节能技术推广服务','其他技术推广服务']},
+		{name:'科技中介服务',service4list:['科技中介服务']},
+		{name:'其他科技推广和应用服务业',service4list:['其他科技推广和应用服务业']}
+	]}
+]},
+{name:'卫生和社会工作',service2list:[
+	{name:'卫生',service3list:[
+		{name:'医院',service4list:['综合医院','中医医院','中西医结合医院','民族医院','专科医院','疗养院']},
+		{name:'社区医疗与卫生院',service4list:['社区卫生服务中心（站）','街道卫生院','乡镇卫生院']},
+		{name:'门诊部（所）',service4list:['门诊部（所）']},
+		{name:'计划生育技术服务活动',service4list:['计划生育技术服务活动']},
+		{name:'妇幼保健院（所、站）',service4list:['妇幼保健院（所、站）']},
+		{name:'专科疾病防治院（所、站）',service4list:['专科疾病防治院（所、站）']},
+		{name:'疾病预防控制中心',service4list:['疾病预防控制中心']},
+		{name:'其他卫生活动',service4list:['其他卫生活动']}
+	]},
+	{name:'社会工作',service3list:[
+		{name:'提供住宿社会工作',service4list:['干部休养所','护理机构服务','精神康复服务','老年人、残疾人养护服务','孤残儿童收养和庇护服务','其他提供住宿社会救助']},
+		{name:'不提供住宿社会工作',service4list:['社会看护与帮助服务','其他不提供住宿社会工作']}
+	]}
+]},
+{name:'水利、环境和公共设施管理业',service2list:[
+	{name:'水利管理业',service3list:[
+		{name:'防洪除涝设施管理',service4list:['防洪除涝设施管理']},
+		{name:'水资源管理',service4list:['水资源管理']},
+		{name:'天然水收集与分配',service4list:['天然水收集与分配']},
+		{name:'水文服务',service4list:['水文服务']},
+		{name:'其他水利管理业',service4list:['其他水利管理业']}
+	]},
+	{name:'生态保护和环境治理业',service3list:[
+		{name:'生态保护',service4list:['自然保护区管理','野生动物保护','野生植物保护','其他自然保护']},
+		{name:'环境治理业',service4list:['水污染治理','大气污染治理','固体废物治理','危险废物治理','放射性废物治理','其他污染治理']}
+	]},
+	{name:'公共设施管理业',service3list:[
+		{name:'市政设施管理',service4list:['市政设施管理']},
+		{name:'环境卫生管理',service4list:['环境卫生管理']},
+		{name:'城乡市容管理',service4list:['城乡市容管理']},
+		{name:'绿化管理',service4list:['绿化管理']},
+		{name:'公园和游览景区管理',service4list:['公园管理','游览景区管理']}
+	]}
+]},
+{name:'教育',service2list:[
+	{name:'教育',service3list:[
+		{name:'学前教育',service4list:['学前教育']},
+		{name:'初等教育',service4list:['普通小学教育','成人小学教育']},
+		{name:'中等教育',service4list:['普通初中教育','职业初中教育','成人初中教育','普通高中教育','成人高中教育','中等职业学校教育']},
+		{name:'高等教育',service4list:['普通高等教育','成人高等教育']},
+		{name:'特殊教育',service4list:['特殊教育']},
+		{name:'技能培训、教育辅助及其他教育',service4list:['职业技能培训','体校及体育培训','文化艺术培训','教育辅助服务','其他未列明教育']}
+	]}
+]},
+{name:'居民服务、修理和其他服务业',service2list:[
+	{name:'居民服务业',service3list:[
+		{name:'家庭服务',service4list:['家庭服务']},
+		{name:'托儿所服务',service4list:['托儿所服务']},
+		{name:'洗染服务',service4list:['洗染服务']},
+		{name:'理发及美容服务',service4list:['理发及美容服务']},
+		{name:'洗浴服务',service4list:['洗浴服务']},
+		{name:'保健服务',service4list:['保健服务']},
+		{name:'婚姻服务',service4list:['婚姻服务']},
+		{name:'殡葬服务',service4list:['殡葬服务']},
+		{name:'其他居民服务业',service4list:['其他居民服务业']}
+	]},
+	{name:'机动车、电子产品和日用产品修理业',service3list:[
+		{name:'汽车、摩托车修理与维护',service4list:['汽车修理与维护','摩托车修理与维护']},
+		{name:'计算机和办公设备维修',service4list:['计算机和辅助设备修理','通讯设备修理','其他办公设备维修']},
+		{name:'家用电器修理',service4list:['家用电子产品修理','日用电器修理']},
+		{name:'其他日用产品修理业',service4list:['自行车修理','鞋和皮革修理','家具和相关物品修理','其他未列明日用产品修理业']}
+	]},
+	{name:'其他服务业',service3list:[
+		{name:'清洁服务',service4list:['建筑物清洁服务','其他清洁服务']},
+		{name:'其他未列明服务业',service4list:['其他未列明服务业']}
+	]}
+]},
+{name:'交通运输、仓储和邮政业',service2list:[
+	{name:'铁路运输业',service3list:[
+		{name:'铁路旅客运输',service4list:['铁路旅客运输']},
+		{name:'铁路货物运输',service4list:['铁路货物运输']},
+		{name:'铁路运输辅助活动',service4list:['客运火车站','货运火车站','其他铁路运输辅助活动']}
+	]},
+	{name:'道路运输业',service3list:[
+		{name:'城市公共交通运输',service4list:['公共电汽车客运','城市轨道交通','出租车客运','其他城市公共交通运输']},
+		{name:'公路旅客运输',service4list:['公路旅客运输']},
+		{name:'道路货物运输',service4list:['道路货物运输']},
+		{name:'道路运输辅助活动',service4list:['客运汽车站','公路管理与养护','其他道路运输辅助活动']}
+	]},
+	{name:'水上运输业',service3list:[
+		{name:'水上旅客运输',service4list:['海洋旅客运输','内河旅客运输','客运轮渡运输']},
+		{name:'水上货物运输',service4list:['远洋货物运输','沿海货物运输','内河货物运输']},
+		{name:'水上运输辅助活动',service4list:['客运港口','货运港口','其他水上运输辅助活动']}
+	]},
+	{name:'航空运输业',service3list:[
+		{name:'航空客货运输',service4list:['航空旅客运输','航空货物运输']},
+		{name:'通用航空服务',service4list:['通用航空服务']},
+		{name:'航空运输辅助活动',service4list:['机场','空中交通管理','其他航空运输辅助活动']}
+	]},
+	{name:'管道运输业',service3list:[
+		{name:'管道运输业',service4list:['管道运输业']}
+	]},
+	{name:'装卸搬运和运输代理业',service3list:[
+		{name:'装卸搬运',service4list:['装卸搬运']},
+		{name:'运输代理业',service4list:['货物运输代理','旅客票务代理','其他运输代理业']}
+	]},
+	{name:'仓储业',service3list:[
+		{name:'谷物、棉花等农产品仓储',service4list:['谷物仓储','棉花仓储','其他农产品仓储']},
+		{name:'其他仓储业',service4list:['其他仓储业']}
+	]},
+	{name:'邮政业',service3list:[
+		{name:'邮政基本服务',service4list:['邮政基本服务']},
+		{name:'快递服务',service4list:['快递服务']}
+	]}
+]},
+{name:'批发和零售业',service2list:[
+	{name:'批发业',service3list:[
+		{name:'农、林、牧产品批发',service4list:['谷物、豆及薯类批发','种子批发','饲料批发','棉、麻批发','林业产品批发','牲畜批发','其他农牧产品批发']},
+		{name:'食品、饮料及烟草制品批发',service4list:['米、面制品及食用油批发','糕点、糖果及糖批发','果品、蔬菜批发','肉、禽、蛋、奶及水产品批发','盐及调味品批发','营养和保健品批发','酒、饮料及茶叶批发','烟草制品批发','其他食品批发']},
+		{name:'纺织、服装及家庭用品批发',service4list:['纺织品、针织品及原料批发','服装批发','鞋帽批发','化妆品及卫生用品批发','厨房、卫生间用具及日用杂货批发','灯具、装饰物品批发','家用电器批发','其他家庭用品批发']},
+		{name:'文化、体育用品及器材批发',service4list:['文具用品批发','体育用品及器材批发','图书批发','报刊批发','音像制品及电子出版物批发','首饰、工艺品及收藏品批发','其他文化用品批发']},
+		{name:'医药及医疗器材批发',service4list:['西药批发','中药批发','医疗用品及器材批发']},
+		{name:'矿产品、建材及化工产品批发',service4list:['煤炭及制品批发','石油及制品批发','非金属矿及制品批发','金属及金属矿批发','建材批发','化肥批发','农药批发','农用薄膜批发','其他化工产品批发']},
+		{name:'机械设备、五金产品及电子产品批发',service4list:['农业机械批发','汽车批发','汽车零配件批发','摩托车及零配件批发','五金产品批发','电气设备批发','计算机、软件及辅助设备批发','通讯及广播电视设备批发','其他机械设备及电子产品批发']},
+		{name:'贸易经纪与代理',service4list:['贸易代理','拍卖','其他贸易经纪与代理']},
+		{name:'其他批发业',service4list:['再生物资回收与批发','其他未列明批发业']}
+	]},
+	{name:'零售业',service3list:[
+		{name:'综合零售',service4list:['百货零售','超级市场零售','其他综合零售']},
+		{name:'食品、饮料及烟草制品专门零售',service4list:['粮油零售','糕点、面包零售','果品、蔬菜零售','肉、禽、蛋、奶及水产品零售','营养和保健品零售','酒、饮料及茶叶零售','烟草制品零售','其他食品零售']},
+		{name:'纺织、服装及日用品专门零售',service4list:['纺织品及针织品零售','服装零售','鞋帽零售','化妆品及卫生用品零售','钟表、眼镜零售','箱、包零售','厨房用具及日用杂品零售','自行车零售','其他日用品零售']},
+		{name:'文化、体育用品及器材专门零售',service4list:['文具用品零售','体育用品及器材零售','图书、报刊零售','音像制品及电子出版物零售','珠宝首饰零售','工艺美术品及收藏品零售','乐器零售','照相器材零售','其他文化用品零售']},
+		{name:'医药及医疗器材专门零售',service4list:['药品零售','医疗用品及器材零售']},
+		{name:'汽车、摩托车、燃料及零配件专门零售',service4list:['汽车零售','汽车零配件零售','摩托车及零配件零售','机动车燃料零售']},
+		{name:'家用电器及电子产品专门零售',service4list:['家用视听设备零售','日用家电设备零售','计算机、软件及辅助设备零售','通信设备零售','其他电子产品零售']},
+		{name:'五金、家具及室内装饰材料专门零售',service4list:['五金零售','灯具零售','家具零售','涂料零售','卫生洁具零售','木质装饰材料零售','陶瓷、石材装饰材料零售','其他室内装饰材料零售']},
+		{name:'货摊、无店铺及其他零售业',service4list:['货摊食品零售','货摊纺织、服装及鞋零售','货摊日用品零售','互联网零售','邮购及电视、电话零售','旧货零售','生活用燃料零售','其他未列明零售业']}
+	]}
+]},
+{name:'采矿业',service2list:[
+	{name:'煤炭开采和洗选业',service3list:[
+		{name:'烟煤和无烟煤开采洗选',service4list:['烟煤和无烟煤开采洗选']},
+		{name:'褐煤开采洗选',service4list:['褐煤开采洗选']},
+		{name:'其他煤炭采选',service4list:['其他煤炭采选']}
+	]},
+	{name:'石油和天然气开采业',service3list:[
+		{name:'石油开采',service4list:['石油开采']},
+		{name:'天然气开采',service4list:['天然气开采']}
+	]},
+	{name:'黑色金属矿采选业',service3list:[
+		{name:'铁矿采选',service4list:['铁矿采选']},
+		{name:'锰矿、铬矿采选',service4list:['锰矿、铬矿采选']},
+		{name:'其他黑色金属矿采选',service4list:['其他黑色金属矿采选']}
+	]},
+	{name:'有色金属矿采选业',service3list:[
+		{name:'常用有色金属矿采选',service4list:['铜矿采选','铅锌矿采选','镍钴矿采选','锡矿采选','锑矿采选','铝矿采选','镁矿采选','其他常用有色金属矿采选']},
+		{name:'贵金属矿采选',service4list:['金矿采选','银矿采选','其他贵金属矿采选']},
+		{name:'稀有稀土金属矿采选',service4list:['钨钼矿采选','稀土金属矿采选','放射性金属矿采选','其他稀有金属矿采选']}
+	]},
+	{name:'非金属矿采选业',service3list:[
+		{name:'土砂石开采',service4list:['石灰石、石膏开采','建筑装饰用石开采','耐火土石开采','粘土及其他土砂石开采']},
+		{name:'化学矿开采',service4list:['化学矿开采']},
+		{name:'采盐',service4list:['采盐']},
+		{name:'石棉及其他非金属矿采选',service4list:['石棉、云母矿采选','石墨、滑石采选','宝石、玉石采选','其他未列明非金属矿采选']}
+	]},
+	{name:'开采辅助活动',service3list:[
+		{name:'煤炭开采和洗选辅助活动',service4list:['煤炭开采和洗选辅助活动']},
+		{name:'石油和天然气开采辅助活动',service4list:['石油和天然气开采辅助活动']},
+		{name:'其他开采辅助活动',service4list:['其他开采辅助活动']}
+	]},
+	{name:'其他采矿业',service3list:[
+		{name:'其他采矿业',service4list:['其他采矿业']}
+	]}
+]},
+{name:'建筑业',service2list:[
+	{name:'房屋建筑业',service3list:[
+		{name:'房屋建筑业',service4list:['房屋建筑业']}
+	]},
+	{name:'土木工程建筑业',service3list:[
+		{name:'铁路、道路、隧道和桥梁工程建筑',service4list:['铁路工程建筑','公路工程建筑','市政道路工程建筑','其他道路、隧道和桥梁工程建筑']},
+		{name:'水利和内河港口工程建筑',service4list:['水源及供水设施工程建筑','河湖治理及防洪设施工程建筑','港口及航运设施工程建筑']},
+		{name:'海洋工程建筑',service4list:['海洋工程建筑']},
+		{name:'工矿工程建筑',service4list:['工矿工程建筑']},
+		{name:'架线和管道工程建筑',service4list:['架线及设备工程建筑','管道工程建筑']},
+		{name:'管道工程建筑',service4list:['管道工程建筑']}
+	]},
+	{name:'建筑安装业',service3list:[
+		{name:'电气安装',service4list:['电气安装']},
+		{name:'管道和设备安装',service4list:['管道和设备安装']},
+		{name:'其他建筑安装业',service4list:['其他建筑安装业']}
+	]},
+	{name:'建筑装饰和其他建筑业',service3list:[
+		{name:'建筑装饰业',service4list:['建筑装饰业']},
+		{name:'工程准备活动',service4list:['建筑物拆除活动','其他工程准备活动']},
+		{name:'提供施工设备服务',service4list:['提供施工设备服务']},
+		{name:'其他未列明建筑业',service4list:['其他未列明建筑业']}
+	]}
+]},
+{name:'电力、热力、燃气及水生产和供应业',service2list:[
+	{name:'电力、热力生产和供应业',service3list:[
+		{name:'电力生产',service4list:['火力发电','水力发电','核力发电','风力发电','太阳能发电','其他电力生产']},
+		{name:'电力供应',service4list:['电力供应']},
+		{name:'热力生产和供应',service4list:['热力生产和供应']}
+	]},
+	{name:'燃气生产和供应业',service3list:[
+		{name:'燃气生产和供应业',service4list:['燃气生产和供应业']}
+	]},
+	{name:'水的生产和供应业',service3list:[
+		{name:'自来水生产和供应',service4list:['自来水生产和供应']},
+		{name:'污水处理及其再生利用',service4list:['污水处理及其再生利用']},
+		{name:'其他水的处理、利用与分配',service4list:['其他水的处理、利用与分配']}
+	]}
+]},
+{name:'制造业',service2list:[
+	{name:'农副食品加工业',service3list:[
+		{name:'谷物磨制',service4list:['谷物磨制']},
+		{name:'饲料加工',service4list:['饲料加工']},
+		{name:'植物油加工',service4list:['食用植物油加工','非食用植物油加工']},
+		{name:'制糖业',service4list:['制糖业']},
+		{name:'屠宰及肉类加工',service4list:['牲畜屠宰','禽类屠宰','肉制品及副产品加工']},
+		{name:'水产品加工',service4list:['水产品冷冻加工','鱼糜制品及水产品干腌制加工','水产饲料制造','鱼油提取及制品制造','其他水产品加工']},
+		{name:'蔬菜、水果和坚果加工',service4list:['蔬菜加工','水果和坚果加工']},
+		{name:'其他农副食品加工',service4list:['淀粉及淀粉制品制造','豆制品制造','蛋品加工','其他未列明农副食品加工']}
+	]},
+	{name:'食品制造业',service3list:[
+		{name:'焙烤食品制造',service4list:['糕点、面包制造','饼干及其他焙烤食品制造']},
+		{name:'糖果、巧克力及蜜饯制造',service4list:['糖果、巧克力制造','蜜饯制作']},
+		{name:'方便食品制造',service4list:['米、面制品制造','速冻食品制造','方便面及其他方便食品制造']},
+		{name:'乳制品制造',service4list:['乳制品制造']},
+		{name:'罐头食品制造',service4list:['肉、禽类罐头制造','水产品罐头制造','蔬菜、水果罐头制造','其他罐头食品制造']},
+		{name:'调味品、发酵制品制造',service4list:['味精制造','酱油、食醋及类似制品制造','其他调味品、发酵制品制造']},
+		{name:'其他食品制造',service4list:['营养食品制造','保健食品制造','冷冻饮品及食用冰制造','盐加工','食品及饲料添加剂制造','其他未列明食品制造']}
+	]},
+	{name:'酒、饮料和精制茶制造业',service3list:[
+		{name:'酒的制造',service4list:['酒精制造','白酒制造','啤酒制造','黄酒制造','葡萄酒制造','其他酒制造']},
+		{name:'饮料制造',service4list:['碳酸饮料制造','瓶（罐）装饮用水制造','果菜汁及果菜汁饮料制造','含乳饮料和植物蛋白饮料制造','固体饮料制造','茶饮料及其他饮料制造']},
+		{name:'精制茶加工',service4list:['精制茶加工']}
+	]},
+	{name:'烟草制品业',service3list:[
+		{name:'烟叶复烤',service4list:['烟叶复烤']},
+		{name:'卷烟制造',service4list:['卷烟制造']},
+		{name:'其他烟草制品制造',service4list:['其他烟草制品制造']}
+	]},
+	{name:'纺织业',service3list:[
+		{name:'棉纺织及印染精加工',service4list:['棉纺纱加工','棉织造加工','棉印染精加工']},
+		{name:'毛纺织及染整精加工',service4list:['毛条和毛纱线加工','毛织造加工','毛染整精加工']},
+		{name:'麻纺织及染整精加工',service4list:['麻纤维纺前加工和纺纱','麻织造加工','麻染整精加工']},
+		{name:'丝绢纺织及印染精加工',service4list:['缫丝加工','绢纺和丝织加工','丝印染精加工']},
+		{name:'化纤织造及印染精加工',service4list:['化纤织造加工','化纤织物染整精加工']},
+		{name:'针织或钩针编织物及其制品制造',service4list:['针织或钩针编织物织造','针织或钩针编织物印染精加工','针织或钩针编织品制造']},
+		{name:'家用纺织制成品制造',service4list:['床上用品制造','毛巾类制品制造','窗帘、布艺类产品制造','其他家用纺织制成品制造']},
+		{name:'非家用纺织制成品制造',service4list:['非织造布制造','绳、索、缆制造','纺织带和帘子布制造','篷、帆布制造','其他非家用纺织制成品制造']}
+	]},
+	{name:'纺织服装、服饰业',service3list:[
+		{name:'机织服装制造',service4list:['机织服装制造']},
+		{name:'针织或钩针编织服装制造',service4list:['针织或钩针编织服装制造']},
+		{name:'服饰制造',service4list:['服饰制造']}
+	]},
+	{name:'皮革、毛皮、羽毛及其制品和制鞋业',service3list:[
+		{name:'皮革鞣制加工',service4list:['皮革鞣制加工']},
+		{name:'皮革制品制造',service4list:['皮革服装制造','皮箱、包（袋）制造','皮手套及皮装饰制品制造','其他皮革制品制造']},
+		{name:'毛皮鞣制及制品加工',service4list:['毛皮鞣制加工','毛皮服装加工','其他毛皮制品加工']},
+		{name:'羽毛(绒)加工及制品制造',service4list:['羽毛（绒）加工','羽毛（绒）制品加工']},
+		{name:'制鞋业',service4list:['纺织面料鞋制造','皮鞋制造','塑料鞋制造','橡胶鞋制造','其他制鞋业']}
+	]},
+	{name:'木材加工和木、竹、藤、棕、草制品 业',service3list:[
+		{name:'木材加工',service4list:['锯材加工','木片加工','单板加工','其他木材加工']},
+		{name:'人造板制造',service4list:['胶合板制造','纤维板制造','刨花板制造','其他人造板制造']},
+		{name:'木制品制造',service4list:['建筑用木料及木材组件加工','木门窗、楼梯制造','地板制造','木制容器制造','软木制品及其他木制品制造']},
+		{name:'竹、藤、棕、草等制品制造',service4list:['竹制品制造','藤制品制造','棕制品制造','草及其他制品制造']}
+	]},
+	{name:'家具制造业',service3list:[
+		{name:'木质家具制造',service4list:['木质家具制造']},
+		{name:'竹、藤家具制造',service4list:['竹、藤家具制造']},
+		{name:'金属家具制造',service4list:['金属家具制造']},
+		{name:'塑料家具制造',service4list:['塑料家具制造']},
+		{name:'其他家具制造',service4list:['其他家具制造']}
+	]},
+	{name:'造纸和纸制品业',service3list:[
+		{name:'纸浆制造',service4list:['木竹浆制造','非木竹浆制造']},
+		{name:'造纸',service4list:['机制纸及纸板制造','手工纸制造','加工纸制造']},
+		{name:'纸制品制造',service4list:['纸和纸板容器制造','其他纸制品制造']}
+	]},
+	{name:'印刷和记录媒介复制业',service3list:[
+		{name:'印刷和记录媒介复制业印刷',service4list:['书、报刊印刷','本册印制','包装装潢及其他印刷']},
+		{name:'装订及印刷相关服务',service4list:['装订及印刷相关服务']},
+		{name:'记录媒介复制',service4list:['记录媒介复制']}
+	]},
+	{name:'文教、工美、体育和娱乐用品制造业',service3list:[
+		{name:'文教办公用品制造',service4list:['文具制造','笔的制造','教学用模型及教具制造','墨水、墨汁制造','其他文教办公用品制造']},
+		{name:'乐器制造',service4list:['中乐器制造','西乐器制造','电子乐器制造','其他乐器及零件制造']},
+		{name:'工艺美术品制造',service4list:['雕塑工艺品制造','金属工艺品制造','漆器工艺品制造','花画工艺品制造','天然植物纤维编织工艺品制造','抽纱刺绣工艺品制造','地毯、挂毯制造','珠宝首饰及有关物品制造','其他工艺美术品制造']},
+		{name:'体育用品制造',service4list:['球类制造','体育器材及配件制造','训练健身器材制造','运动防护用具制造','其他体育用品制造']},
+		{name:'玩具制造',service4list:['玩具制造']},
+		{name:'游艺器材及娱乐用品制造',service4list:['露天游乐场所游乐设备制造','游艺用品及室内游艺器材制造','其他娱乐用品制造']}
+	]},
+	{name:'石油加工、炼焦和核燃料加工业',service3list:[
+		{name:'精炼石油产品制造',service4list:['原油加工及石油制品制造','人造原油制造']},
+		{name:'炼焦',service4list:['炼焦']},
+		{name:'核燃料加工',service4list:['核燃料加工']}
+	]},
+	{name:'化学原料和化学制品制造业',service3list:[
+		{name:'基础化学原料制造',service4list:['无机酸制造','无机碱制造','无机盐制造','有机化学原料制造','其他基础化学原料制造']},
+		{name:'肥料制造',service4list:['氮肥制造','磷肥制造','钾肥制造','复混肥料制造','有机肥料及微生物肥料制造','其他肥料制造']},
+		{name:'农药制造',service4list:['化学农药制造','生物化学农药及微生物农药制造']},
+		{name:'涂料、油墨、颜料及类似产品制造',service4list:['涂料制造','油墨及类似产品制造','颜料制造','染料制造','密封用填料及类似品制造']},
+		{name:'合成材料制造',service4list:['初级形态塑料及合成树脂制造','合成橡胶制造','合成纤维单（聚合）体制造','其他合成材料制造']},
+		{name:'专用化学产品制造',service4list:['化学试剂和助剂制造','专项化学用品制造','林产化学产品制造','信息化学品制造','环境污染处理专用药剂材料制造','动物胶制造','他专用化学产品制造']},
+		{name:'炸药、火工及焰火产品制造',service4list:['炸药及火工产品制造','焰火、鞭炮产品制造']},
+		{name:'日用化学产品制造',service4list:['肥皂及合成洗涤剂制造','化妆品制造','口腔清洁用品制造','香料、香精制造','其他日用化学产品制造']}
+	]},
+	{name:'医药制造业',service3list:[
+		{name:'化学药品原料药制造',service4list:['化学药品原料药制造']},
+		{name:'化学药品制剂制造',service4list:['化学药品制剂制造']},
+		{name:'中药饮片加工',service4list:['中药饮片加工']},
+		{name:'中成药生产',service4list:['中成药生产']},
+		{name:'兽用药品制造',service4list:['兽用药品制造']},
+		{name:'生物药品制造',service4list:['生物药品制造']},
+		{name:'卫生材料及医药用品制造',service4list:['卫生材料及医药用品制造']}
+	]},
+	{name:'化学纤维制造业',service3list:[
+		{name:'纤维素纤维原料及纤维制造',service4list:['化纤浆粕制造','人造纤维（纤维素纤维）制造']},
+		{name:'合成纤维制造',service4list:['锦纶纤维制造','涤纶纤维制造','腈纶纤维制造','维纶纤维制造','丙纶纤维制造','氨纶纤维制造','其他合成纤维制造']}
+	]},
+	{name:'橡胶和塑料制品业',service3list:[
+		{name:'橡胶制品业',service4list:['轮胎制造','橡胶板、管、带制造','橡胶零件制造','再生橡胶制造','日用及医用橡胶制品制造','其他橡胶制品制造']},
+		{name:'塑料制品业',service4list:['塑料薄膜制造','塑料板、管、型材制造','塑料丝、绳及编织品制造','泡沫塑料制造','塑料人造革、合成革制造','塑料包装箱及容器制造','日用塑料制品制造','塑料零件制造','其他塑料制品制造']}
+	]},
+	{name:'非金属矿物制品业',service3list:[
+		{name:'水泥、石灰和石膏制造',service4list:['水泥制造','石灰和石膏制造']},
+		{name:'石膏、水泥制品及类似制品制造',service4list:['水泥制品制造','砼结构构件制造','石棉水泥制品制造','轻质建筑材料制造','其他水泥类似制品制造']},
+		{name:'砖瓦、石材等建筑材料制造',service4list:['粘土砖瓦及建筑砌块制造','建筑陶瓷制品制造','建筑用石加工','防水建筑材料制造','隔热和隔音材料制造','其他建筑材料制造']},
+		{name:'玻璃制造',service4list:['平板玻璃制造','其他玻璃制造']},
+		{name:'玻璃制品制造',service4list:['技术玻璃制品制造','光学玻璃制造','玻璃仪器制造','日用玻璃制品制造','玻璃包装容器制造','玻璃保温容器制造','制镜及类似品加工','其他玻璃制品制造']},
+		{name:'玻璃纤维和玻璃纤维增强塑料制品制造',service4list:['玻璃纤维及制品制造','玻璃纤维增强塑料制品制造']},
+		{name:'陶瓷制品制造',service4list:['卫生陶瓷制品制造','特种陶瓷制品制造','日用陶瓷制品制造','园林、陈设艺术及其他陶瓷制品制造']},
+		{name:'耐火材料制品制造',service4list:['石棉制品制造','云母制品制造','耐火陶瓷制品及其他耐火材料制造']},
+		{name:'石墨及其他非金属矿物制品制造',service4list:['石墨及碳素制品制造','其他非金属矿物制品制造']}
+	]},
+	{name:'黑色金属冶炼和压延加工业',service3list:[
+		{name:'炼铁',service4list:['炼铁']},
+		{name:'炼钢',service4list:['炼钢']},
+		{name:'黑色金属铸造',service4list:['黑色金属铸造']},
+		{name:'钢压延加工',service4list:['钢压延加工']},
+		{name:'铁合金冶炼',service4list:['铁合金冶炼']}
+	]},
+	{name:'有色金属冶炼和压延加工业',service3list:[
+		{name:'常用有色金属冶炼',service4list:['铜冶炼','铅锌冶炼','镍钴冶炼','锡冶炼','锑冶炼','铝冶炼','镁冶炼','其他常用有色金属冶炼']},
+		{name:'贵金属冶炼',service4list:['金冶炼','银冶炼','其他贵金属冶炼']},
+		{name:'稀有稀土金属冶炼',service4list:['钨钼冶炼','稀土金属冶炼','其他稀有金属冶炼']},
+		{name:'有色金属合金制造',service4list:['有色金属合金制造']},
+		{name:'有色金属铸造',service4list:['有色金属铸造']},
+		{name:'有色金属压延加工',service4list:['铜压延加工','铝压延加工','贵金属压延加工','稀有稀土金属压延加工','其他有色金属压延加工']}
+	]},
+	{name:'金属制品业',service3list:[
+		{name:'结构性金属制品制造',service4list:['金属结构制造','金属门窗制造']},
+		{name:'金属工具制造',service4list:['切削工具制造','手工具制造','农用及园林用金属工具制造','刀剪及类似日用金属工具制造','其他金属工具制造']},
+		{name:'集装箱及金属包装容器制造',service4list:['集装箱制造','金属压力容器制造','金属包装容器制造']},
+		{name:'金属丝绳及其制品制造',service4list:['金属丝绳及其制品制造']},
+		{name:'建筑、安全用金属制品制造',service4list:['建筑、家具用金属配件制造','建筑装饰及水暖管道零件制造','安全、消防用金属制品制造','其他建筑、安全用金属制品制造']},
+		{name:'金属表面处理及热处理加工',service4list:['金属表面处理及热处理加工']},
+		{name:'搪瓷制品制造',service4list:['生产专用搪瓷制品制造','建筑装饰搪瓷制品制造','搪瓷卫生洁具制造','搪瓷日用品及其他搪瓷制品制造']},
+		{name:'金属制日用品制造',service4list:['金属制厨房用器具制造','金属制餐具和器皿制造','金属制卫生器具制造','其他金属制日用品制造']},
+		{name:'其他金属制品制造',service4list:['锻件及粉末冶金制品制造','交通及公共管理用金属标牌制造','其他未列明金属制品制造']}
+	]},
+	{name:'通用设备制造业',service3list:[
+		{name:'锅炉及原动设备制造',service4list:['锅炉及辅助设备制造','内燃机及配件制造','汽轮机及辅机制造','水轮机及辅机制造','风能原动设备制造','其他原动设备制造']},
+		{name:'金属加工机械制造',service4list:['金属切削机床制造','金属成形机床制造','铸造机械制造','金属切割及焊接设备制造','机床附件制造','其他金属加工机械制造']},
+		{name:'物料搬运设备制造',service4list:['轻小型起重设备制造','起重机制造','生产专用车辆制造','连续搬运设备制造','电梯、自动扶梯及升降机制造','其他物料搬运设备制造']},
+		{name:'泵、阀门、压缩机及类似机械制造',service4list:['泵及真空设备制造','气体压缩机械制造','门和旋塞制造','液压和气压动力机械及元件制造']},
+		{name:'轴承、齿轮和传动部件制造',service4list:['轴承制造','齿轮及齿轮减、变速箱制造','其他传动部件制造']},
+		{name:'烘炉、风机、衡器、包装等设备制造',service4list:['烘炉、熔炉及电炉制造','风机、风扇制造','气体、液体分离及纯净设备制造','制冷、空调设备制造','风动和电动工具制造','喷枪及类似器具制造','衡器制造','包装专用设备制造']},
+		{name:'文化、办公用机械制造',service4list:['电影机械制造','幻灯及投影设备制造','照相机及器材制造','复印和胶印设备制造','计算器及货币专用设备制造','其他文化、办公用机械制造']},
+		{name:'通用零部件制造',service4list:['金属密封件制造','紧固件制造','弹簧制造','机械零部件加工','其他通用零部件制造']},
+		{name:'其他通用设备制造业',service4list:['其他通用设备制造业']}
+	]},
+	{name:'专用设备制造业',service3list:[
+		{name:'采矿、冶金、建筑专用设备制造',service4list:['矿山机械制造','石油钻采专用设备制造','建筑工程用机械制造','海洋工程专用设备制造','建筑材料生产专用机械制造','冶金专用设备制造']},
+		{name:'化工、木材、非金属加工专用设备制造',service4list:['炼油、化工生产专用设备制造','橡胶加工专用设备制造','塑料加工专用设备制造','木材加工机械制造','模具制造','其他非金属加工专用设备制造']},
+		{name:'食品、饮料、烟草及饲料生产专用',service4list:['食品、酒、饮料及茶生产专用设备制造','农副食品加工专用设备制造','烟草生产专用设备制造','饲料生产专用设备制造']},
+		{name:'印刷、制药、日化及日用品生产专 用设备制造',service4list:['制浆和造纸专用设备制造','印刷专用设备制造','日用化工专用设备制造','制药专用设备制造','照明器具生产专用设备制造','玻璃、陶瓷和搪瓷制品生产专用 设备制造','其他日用品生产专用设备制造']},
+		{name:'纺织、服装和皮革加工专用设备制造',service4list:['纺织专用设备制造','皮革、毛皮及其制品加工专用设备制造','缝制机械制造','洗涤机械制造']},
+		{name:'电子和电工机械专用设备制造',service4list:['电工机械专用设备制造','电子工业专用设备制造']},
+		{name:'农、林、牧、渔专用机械制造',service4list:['拖拉机制造','机械化农业及园艺机具制造','营林及木竹采伐机械制造','畜牧机械制造','渔业机械制造','农林牧渔机械配件制造','棉花加工机械制造','其他农、林、牧、渔业机械制造']},
+		{name:'医疗仪器设备及器械制造',service4list:['医疗诊断、监护及治疗设备制造','口腔科用设备及器具制造','医疗实验室及医用消毒设备和器具制造','医疗、外科及兽医用器械制造','机械治疗及病房护理设备制造','假肢、人工器官及植（介）入器具制造','其他医疗设备及器械制造']},
+		{name:'环保、社会公共服务及其他专用',service4list:['环境保护专用设备制造','地质勘查专用设备制造','邮政专用机械及器材制造','商业、饮食、服务专用设备制造','社会公共安全设备及器材制造','交通安全、管制及类似专用设备制造','水资源专用机械制造','其他专用设备制造']}
+	]},
+	{name:'汽车制造业',service3list:[
+		{name:'汽车整车制造',service4list:['汽车整车制造']},
+		{name:'改装汽车制造',service4list:['改装汽车制造']},
+		{name:'低速载货汽车制造',service4list:['低速载货汽车制造']},
+		{name:'电车制造',service4list:['电车制造']},
+		{name:'汽车车身、挂车制造',service4list:['汽车车身、挂车制造']},
+		{name:'汽车零部件及配件制造',service4list:['汽车零部件及配件制造']}
+	]},
+	{name:'铁路、船舶、航空航天和其他运输设 备制造业',service3list:[
+		{name:'铁路运输设备制造',service4list:['铁路机车车辆及动车组制造','窄轨机车车辆制造','铁路机车车辆配件制造','铁路专用设备及器材、配件制造','其他铁路运输设备制造']},
+		{name:'城市轨道交通设备制造',service4list:['城市轨道交通设备制造']},
+		{name:'船舶及相关装置制造',service4list:['金属船舶制造','非金属船舶制造','娱乐船和运动船制造','船用配套设备制造','船舶改装与拆除','航标器材及其他相关装置制造']},
+		{name:'航空、航天器及设备制造',service4list:['飞机制造','航天器制造','航空、航天相关设备制造','其他航空航天器制造']},
+		{name:'摩托车制造',service4list:['摩托车整车制造','摩托车零部件及配件制造']},
+		{name:'自行车制造',service4list:['脚踏自行车及残疾人座车制造','助动自行车制造']},
+		{name:'非公路休闲车及零配件制造',service4list:['非公路休闲车及零配件制造']},
+		{name:'潜水救捞及其他未列明运输设备制造',service4list:['潜水及水下救捞装备制造','未列明运输设备制造']}
+	]},
+	{name:'电气机械和器材制造业',service3list:[
+		{name:'电机制造',service4list:['发电机及发电机组制造','电动机制造','微电机及其他电机制造']},
+		{name:'输配电及控制设备制造',service4list:['变压器、整流器和电感器制造','电容器及其配套设备制造','配电开关控制设备制造','电力电子元器件制造','光伏设备及元器件制造','其他输配电及控制设备制造']},
+		{name:'电线、电缆、光缆及电工器材制造',service4list:['电线、电缆制造','光纤、光缆制造','绝缘制品制造','其他电工器材制造']},
+		{name:'电池制造',service4list:['锂离子电池制造','镍氢电池制造','其他电池制造']},
+		{name:'家用电力器具制造',service4list:['家用制冷电器具制造','家用空气调节器制造','家用通风电器具制造','家用厨房电器具制造','家用清洁卫生电器具制造','家用美容、保健电器具制造','家用电力器具专用配件制造','家用电力器具专用配件制造']},
+		{name:'非电力家用器具制造',service4list:['燃气、太阳能及类似能源家用器具制造','其他非电力家用器具制造 照明器具制造']},
+		{name:'照明器具制造',service4list:['电光源制造','照明灯具制造','灯用电器附件及其他照明器具制造']},
+		{name:'其他电气机械及器材制造',service4list:['电气信号设备装置制造','其他未列明电气机械及器材制造']}
+	]},
+	{name:'计算机、通信和其他电子设备制造业',service3list:[
+		{name:'计算机制造',service4list:['计算机整机制造','计算机零部件制造','计算机外围设备制造','其他计算机制造']},
+		{name:'通信设备制造',service4list:['通信系统设备制造','通信终端设备制造']},
+		{name:'广播电视设备制造',service4list:['广播电视节目制作及发射设备制造','广播电视接收设备及器材制造','应用电视设备及其他广播电视设备制造']},
+		{name:'雷达及配套设备制造',service4list:['雷达及配套设备制造']},
+		{name:'视听设备制造',service4list:['电视机制造','音响设备制造','影视录放设备制造']},
+		{name:'电子器件制造',service4list:['电子真空器件制造','半导体分立器件制造','集成电路制造','光电子器件及其他电子器件制造']},
+		{name:'电子元件制造',service4list:['电子元件制造','印制电路板制造']},
+		{name:'其他电子设备制造',service4list:['其他电子设备制造']}
+	]},
+	{name:'仪器仪表制造业',service3list:[
+		{name:'通用仪器仪表制造',service4list:['工业自动控制系统装置制造','电工仪器仪表制造','绘图、计算及测量仪器制造','实验分析仪器制造','试验机制造','供应用仪表及其他通用仪器制造']},
+		{name:'专用仪器仪表制造',service4list:['环境监测专用仪器仪表制造','运输设备及生产用计数仪表制造','导航、气象及海洋专用仪器制造','农林牧渔专用仪器仪表制造','地质勘探和地震专用仪器制造','教学专用仪器制造','核子及核辐射测量仪器制造','电子测量仪器制造','其他专用仪器制造']},
+		{name:'钟表与计时仪器制造',service4list:['钟表与计时仪器制造']},
+		{name:'光学仪器及眼镜制造',service4list:['光学仪器制造','眼镜制造']},
+		{name:'其他仪器仪表制造业',service4list:['其他仪器仪表制造业']}
+	]},
+	{name:'其他制造业',service3list:[
+		{name:'日用杂品制造',service4list:['鬃毛加工、制刷及清扫工具制造','其他日用杂品制造']},
+		{name:'煤制品制造',service4list:['煤制品制造']},
+		{name:'核辐射加工',service4list:['核辐射加工']},
+		{name:'其他未列明制造业',service4list:['其他未列明制造业']}
+	]},
+	{name:'废弃资源综合利用业',service3list:[
+		{name:'金属废料和碎屑加工处理',service4list:['金属废料和碎屑加工处理']},
+		{name:'非金属废料和碎屑加工处理',service4list:['非金属废料和碎屑加工处理']}
+	]},
+	{name:'金属制品、机械和设备修理业',service3list:[
+		{name:'金属制品修理',service4list:['金属制品修理']},
+		{name:'通用设备修理',service4list:['通用设备修理']},
+		{name:'专用设备修理',service4list:['专用设备修理']},
+		{name:'铁路、船舶、航空航天等运输设备修理',service4list:['铁路运输设备修理','船舶修理','航空航天器修理','其他运输设备修理']},
+		{name:'电气设备修理',service4list:['电气设备修理']},
+		{name:'仪器仪表修理',service4list:['仪器仪表修理']},
+		{name:'其他机械和设备修理业',service4list:['其他机械和设备修理业']}
+	]}
+]}
+
+
+];

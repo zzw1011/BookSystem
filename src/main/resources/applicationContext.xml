@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:cache="http://www.springframework.org/schema/cache" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.3.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd"
+       default-lazy-init="true">
+
+    <description>Spring公共配置</description>
+
+    <!-- 将配置文件里面的属性添加到spring配置里面来，让applicationContext.xml能读取里面的属性 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:#{systemProperties['jdbc.properties']}</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--配置-->
+    <bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+        <property name="initialSize" value="5"/>
+        <property name="maxActive" value="30"/>
+        <property name="minIdle" value="10"/>
+        <property name="maxWait" value="60000"/>
+        <property name="testOnBorrow" value="true"/>
+
+        <property name="testOnReturn" value="true"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="1800"/>
+        <property name="logAbandoned" value="true"/>
+        <property name="filters" value="mergeStat"/>
+    </bean>
+
+    <!-- 事务配置 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 使用注解事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+    <!-- Jdbc工具 -->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- MyBatis配置 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 自动扫描dto -->
+        <property name="typeAliasesPackage" value="com.zzw.*.entity"/>
+        <!-- 指定Mapper文件位置 -->
+        <property name="mapperLocations" value="classpath*:/mybatis/**/*Mapper.xml"/>
+        <!-- configuration设置 -->
+        <property name="configuration">
+            <bean class="org.apache.ibatis.session.Configuration">
+                <property name="mapUnderscoreToCamelCase" value="true"/>
+            </bean>
+        </property>
+        <!-- 分页插件 -->
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageHelper">
+                    <property name="properties">
+                        <value>
+                            dialect=mysql
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
+    </bean>
+
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+
+    <!-- 事务管理 属性 -->
+    <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="find*" propagation="REQUIRED" read-only="true"/>
+            <tx:method name="get*" propagation="REQUIRED" read-only="true"/>
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="insert*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="edit*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 配置切面 -->
+    <aop:config>
+        <aop:advisor advice-ref="transactionAdvice" pointcut="execution(* com.zzw.base.service.*.*(..))"/>
+    </aop:config>
+
+
+    <context:component-scan base-package="com.zzw.*">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <!-- 定义aspectj -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <!-- Jdbc工具 -->
+
+    <!-- MyBatis Mapper扫描 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.zzw.*.entity"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+
+    <!-- 配置验证码 -->
+    <bean id="imageCaptchaService"
+          class="com.octo.captcha.service.image.DefaultManageableImageCaptchaService">
+        <property name="captchaEngine">
+            <bean class="com.zzw.base.utils.CaptchaEngine"/>
+        </property>
+        <property name="minGuarantedStorageDelayInSeconds" value="3600"/>
+    </bean>
+    <!-- 配置freeMarker的模板路径 -->
+    <bean id="freemarkerConfig"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="defaultEncoding" value="UTF-8"></property>
+        <property name="templateLoaderPath">
+            <value>/WEB-INF/ftl/</value>
+        </property>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="template_update_delay">0</prop>
+            </props>
+        </property>
+        <property name="freemarkerVariables">
+            <map>
+                <entry key="base" value="#{servletContext.contextPath}"/>
+                <entry key="flash_message" value-ref="flashMessageDirective"/>
+                <entry key="panel" value-ref="panelDirective"/>
+                <entry key="topPanel" value-ref="topPanelDirective"/>
+            </map>
+        </property>
+    </bean>
+
+    <!--<cache:annotation-driven cache-manager="cacheManager"/>-->
+    <!--&lt;!&ndash; Spring自己的基于java.util.concurrent.ConcurrentHashMap实现的缓存管理器 &ndash;&gt;-->
+    <!--<bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">-->
+        <!--<property name="caches">-->
+            <!--<set>-->
+                <!--<bean name="sysParamCache" class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean"/>-->
+                <!--<bean name="categoryCache" class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean"/>-->
+                <!--<bean name="dictionaryCache"-->
+                      <!--class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean"/>-->
+            <!--</set>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <cache:annotation-driven cache-manager="cacheManager"/>
+
+    <bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:/ehcache.xml" />
+        <property name="shared" value="true" />
+    </bean>
+
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehCacheManager" />
+    </bean>
+
+
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="209715200"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="resolveLazily" value="true"/>
+    </bean>
+
+    <!--&lt;!&ndash; 定时任务 &ndash;&gt;-->
+    <!--<bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">-->
+    <!--</bean>-->
+
+</beans>

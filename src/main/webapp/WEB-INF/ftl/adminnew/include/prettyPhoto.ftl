@@ -1,0 +1,2 @@
+<link href="${base}/static/admin/css/prettyPhoto.css" type="text/css" rel="stylesheet" media="screen" title="prettyPhoto main stylesheet" charset="utf-8"/>
+<script src="${base}/static/admin/js/jquery.prettyPhoto.js" type="text/javascript" charset="utf-8"></script>

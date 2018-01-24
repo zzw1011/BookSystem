@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzw.base.dao.BaseDao">
+    <!-- 栏目 -->
+    <resultMap type="com.zzw.base.entity.CategoryClassify" id="categoryClassifyMapper">
+        <id column="id" property="id"/>
+        <result column="classify_name" property="classifyName"/>
+        <result column="classify_no" property="classifyNo"/>
+        <result column="create_date" property="createDate"/>
+        <result column="modify_date" property="modifyDate"/>
+
+        <association property="createUser" column="create_user"
+                     javaType="com.zzw.base.entity.UserEntity">
+            <result column="id" property="id"/>
+            <result column="user_name" property="userName"/>
+            <result column="failure_count" property="failureCount"/>
+        </association>
+
+        <association property="updateUser" column="modify_user"
+                     javaType="com.zzw.base.entity.UserEntity">
+            <result column="id" property="id"/>
+            <result column="user_name" property="userName"/>
+            <result column="failure_count" property="failureCount"/>
+        </association>
+    </resultMap>
+
+    <select id="classify_selectCategoryClassify" resultType="com.zzw.base.entity.CategoryClassify"
+            resultMap="categoryClassifyMapper">
+        SELECT * FROM  t_category_classify ORDER BY create_date DESC
+    </select>
+
+    <insert id="classify_saveCategoryClassify" parameterType="com.zzw.base.entity.CategoryClassify"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into t_category_classify(classify_name,classify_no,create_date,create_user)
+        values(#{classifyName}, #{classifyNo},SYSDATE(),#{createUser.id})
+    </insert>
+
+    <delete id="classify_deleteClassifies" parameterType="com.zzw.base.entity.CategoryClassify" >
+        delete from t_category_classify WHERE id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="classify_selectCategoryClassifyById" parameterType="com.zzw.base.entity.CategoryClassify"
+            resultType="com.zzw.base.entity.CategoryClassify"
+                     resultMap="categoryClassifyMapper">
+      SELECT * FROM  t_category_classify WHERE id=#{id} ORDER BY create_date DESC
+    </select>
+
+    <update id="classify_updateClassify" parameterType="com.zzw.base.entity.CategoryClassify"
+            useGeneratedKeys="true" keyProperty="id">
+        update t_category_classify set
+        classify_name=#{classifyName},
+        classify_no=#{classifyNo},
+        modify_user=#{updateUser.id},
+        modify_date=SYSDATE()
+        where id = #{id};
+    </update>
+
+</mapper>
