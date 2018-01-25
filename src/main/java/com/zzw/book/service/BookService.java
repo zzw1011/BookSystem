@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * @创建者：zzw
- * @创建时间 2018/1/11 0011
+ * @创建时间 2018/1/12 0011
  * @描述 图书service层接口
  */
 public interface BookService {
