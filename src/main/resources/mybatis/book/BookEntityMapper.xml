@@ -3,7 +3,42 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zzw.base.dao.BaseDao">
     <resultMap id="BookResultMap" type="com.zzw.book.entity.BookEntity">
-        <id property="bookId" column="book_id"></id>
-        <result property="bookName" column="book_name" javaType="VARCHAR"></result>
+        <id property="id" column="id"></id>
+        <result property="bookId" column="book_id" jdbcType="VARCHAR"></result>
+        <result property="bookName" column="book_name" jdbcType="VARCHAR"></result>
+        <result property="bookAuthor" column="book_author" jdbcType="VARCHAR"></result>
+        <result property="bookPublishing" column="book_publishing" jdbcType="VARCHAR"></result>
+        <result property="bookMoney" column="book_money" jdbcType="DECIMAL"></result>
+        <result property="bookNum" column="book_num" jdbcType="INTEGER"></result>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="modifyDate"/>
+        <association property="createUser" column="create_user"
+                     javaType="com.zzw.base.entity.UserEntity">
+            <result column="id" property="id"/>
+        </association>
+        <association property="updateUser" column="update_user"
+                     javaType="com.zzw.base.entity.UserEntity">
+            <result column="id" property="id"/>
+        </association>
     </resultMap>
+
+    <select id="findPageBook" parameterType="com.zzw.book.entity.BookEntity" resultMap="BookResultMap">
+        SELECT * from b_book
+        where 1=1
+        <if test="bookName !=null and bookName != '' ">
+            and book_name LIKE
+            CONCAT(CONCAT('%',#{bookName}),'%')
+        </if>
+        <if test="bookAuthor !=null and bookAuthor !='' ">
+            and book_author LIKE
+            CONCAT(CONCAT('%',#{bookAuthor}),'%')
+        </if>
+        <if test="bookPublishing !=null and bookPublishing !='' ">
+            and book_publishing = #{bookPublishing}
+        </if>
+        <if test="bookId !=null and bookId !='' ">
+            and book_id = #{bookId}
+        </if>
+        ORDER BY book_name ASC
+    </select>
 </mapper>

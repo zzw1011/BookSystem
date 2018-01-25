@@ -26,12 +26,14 @@
             useGeneratedKeys="true" keyProperty="roleId">
         INSERT into t_role_permission(role_id,per_code)values
         <foreach collection="list" index="index" item="item" separator=",">
-            (#{item.roleId},#{item.per_code})
+            (#{item.roleId},#{item.perCode})
         </foreach>
     </insert>
     <!--删除一个角色权限关系-->
     <delete id="deleteRolePermission" parameterType="java.lang.Long">
         DELETE FROM t_role_permission where role_id=#{roleId}
     </delete>
+
+
 
 </mapper>

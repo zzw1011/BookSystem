@@ -30,6 +30,12 @@
         </if>
     </select>
 
+    <!-- 按id查询角色 -->
+    <select id="selectRoleById" resultType="com.zzw.base.entity.RoleEntity"
+            resultMap="roleResultMap" parameterType="Long">
+        SELECT * FROM t_role where role_id=#{roleId}
+    </select>
+
     <!--根据用户ID查询角色 -->
     <select id="selectRoleByUserId" resultType="com.zzw.base.model.RoleModelEntity"
             resultMap="roleEntityResultMap" parameterType="Long">
@@ -61,6 +67,14 @@
     <delete id="deleteRole" parameterType="java.lang.Long">
         delete from t_role
         where role_id = #{roleId};
+    </delete>
+
+    <!--批量删除-->
+    <delete id="role_deleteRolePermission" parameterType="com.zzw.base.entity.RoleEntity">
+        delete from t_role WHERE role_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </delete>
 
 </mapper>

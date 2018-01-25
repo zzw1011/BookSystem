@@ -40,4 +40,20 @@
        delete from t_user_role where id=#{id};
     </delete>
 
+    <!--通过角色删除用户角色关系-->
+    <delete id="user_deleteUserRoleByRoleId" parameterType="com.zzw.base.entity.UserRoleEntity">
+        delete from t_user_role WHERE role_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--通过角色删除角色权限关系-->
+    <delete id="permission_deleteRolePermissionByRoleId" parameterType="com.zzw.base.entity.RolePermissionEntity">
+        delete from t_role_permission WHERE role_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
 </mapper>

@@ -144,6 +144,7 @@
             });
         });
     });
+
     function viewDategrid(index)
     {
         $listTable.datagrid('selectRow',index);
@@ -157,7 +158,6 @@
             window.location.href = "detail.do?id=" + id;
         }
     }
-
 
 </script>
 </html>
