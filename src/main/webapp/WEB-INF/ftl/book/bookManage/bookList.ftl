@@ -15,7 +15,8 @@
             <div class="table_box">
                 <div class="table_head">
                     <i></i>
-                    <span>图书借阅</span>
+                    <span>图书列表</span>
+                    <input id="addButton" class="right_btn" type="button" value="新增"/>
                 </div>
                 <div class="table_con clearfix">
                     <div class="search_box">
@@ -35,7 +36,7 @@
                                 <th data-options="field:'bookMoney',align:'center'" width="100">单价(元)</th>
                                 <th data-options="field:'bookNum',align:'center'" width="100">数量</th>
                                 <th data-options="field:'bookPublishing',align:'center'" width="100">出版社</th>
-                                <th data-options="field:'_operate',align:'center',formatter:formatView" width="100">操作
+                                <th data-options="field:'_operate',align:'center',formatter:formatEditAndDelAndView" width="100">操作
                                 </th>
                             </tr>
                             </thead>
@@ -50,9 +51,16 @@
 
     $(function () {
         var $searchButton = $("#searchButton");
+        var $addButton = $("#addButton");
+        var $deleteButton = $("#deleteButton");
+        var $editButton = $("#editButton");
         initBookLists();
         $searchButton.click(function () {
             initBookLists();
+        });
+
+        $addButton.click(function () {
+            window.location.href = "add.do";
         });
 
     });

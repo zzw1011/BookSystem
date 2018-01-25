@@ -41,6 +41,14 @@ public class BookController extends BaseController {
     }
 
 
+    @RequestMapping(value = "/bookList",method = RequestMethod.GET)
+    public String bookList(ModelMap model,Long currentIds){
+        model.addAttribute("currentIds", currentIds);
+        return "/book/bookManage/bookList";
+    }
+
+
+
     @RequestMapping(value = "/getPage",method = RequestMethod.GET)
     public @ResponseBody Map<String,Object> getPage(BookEntity bookEntity, final PageQuery pageQuery){
         Map<String, Object> result = new HashMap<>();
