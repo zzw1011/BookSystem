@@ -30,10 +30,9 @@
                             <tr>
                                 <th data-options="field:'d',align:'center'" hidden="true">ID</th>
                                 <th data-options="field:'bookId',align:'center'" width="100">编号</th>
-                                <th data-options="field:'bookName',align:'center'" width="100">书名</th>
-                                <th data-options="field:'bookAuthor',align:'center'" width="100">作者</th>
-                                <th data-options="field:'bookMoney',align:'center'" width="100">单价(元)</th>
-                                <th data-options="field:'bookNum',align:'center'" width="100">数量</th>
+                                <th data-options="field:'bookName',align:'center'" width="150">书名</th>
+                                <th data-options="field:'bookAuthor',align:'center'" width="150">作者</th>
+                                <th data-options="field:'bookType',align:'center'" width="100">类别</th>
                                 <th data-options="field:'bookPublishing',align:'center'" width="100">出版社</th>
                                 <th data-options="field:'_operate',align:'center',formatter:formatView" width="100">操作
                                 </th>

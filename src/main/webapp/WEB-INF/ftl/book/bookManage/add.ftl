@@ -6,10 +6,10 @@
 
 <body>
 <div class="wrap">
-<@panel currentId="${currentIds?c}" parentId="3026998">
+<@panel currentId="3027002" parentId="3026998">
 </@panel>
     <div class="con_right">
-    <@topPanel currentId="${currentIds?c}" parentId="3026998">
+    <@topPanel currentId="3027002" parentId="3026998">
     </@topPanel>
         <div class="right_content">
             <div class="table_box">
@@ -18,18 +18,20 @@
                     <span>新增图书</span>
                 </div>
                 <div class="table_con ">
-                    <form id="editForm" action="save.do" method="post">
+                    <form id="editForm" action="save.do" method="post" enctype="multipart/form-data" novalidate>
                         <table class="tab_edit">
                             <tr>
-                                <td class="input_name">
-                                    <label>图书名称</label>
+                                <td class="input_name" style="width: 10%">
+                                    <label>图书编号</label>
                                 </td>
-                                <td>
-                                    <input class="easyui-textbox" type="text" name="bookName"
+                                <td style="width: 30%">
+                                    <input class="easyui-textbox" type="text" name="bookId"
                                            data-options="required:true"
                                            validType="length[0,20]"></input>
                                 </td>
-                                <td class="input_name">封面图片</td>
+                                <td class="input_name" style="width: 10%">
+                                    <label>封面图片</label>
+                                </td>
                                 <td>
                                     <input name="filePath" data-options="buttonText:'选择文件',required:true"
                                            class="easyui-filebox" style="width: 200px;"/>
@@ -37,12 +39,66 @@
                             </tr>
                             <tr>
                                 <td class="input_name">
-                                    <label>备注</label>
+                                    <label>图书名称</label>
                                 </td>
                                 <td>
-                                    <input class="easyui-textbox" type="text" name="roleRemark"
+                                    <input class="easyui-textbox" type="text" name="bookName"
                                            data-options="required:true"
                                            validType="length[0,50]"></input>
+                                </td>
+                                <td class="input_name">
+                                    <label>图书作者</label>
+                                </td>
+                                <td>
+                                    <input class="easyui-textbox" type="text" name="bookAuthor"
+                                           data-options="required:true"
+                                           validType="length[0,50]"></input>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="input_name">
+                                    <label>出版社</label>
+                                </td>
+                                <td>
+                                    <input class="easyui-textbox" type="text" name="bookPublishing"
+                                           data-options="required:true"
+                                           validType="length[0,50]"></input>
+                                </td>
+                                <td class="input_name">
+                                    <label>图书单价(元)</label>
+                                </td>
+                                <td>
+                                    <input class="easyui-numberbox" type="text" name="bookMoney"
+                                           data-options="required:true"  style="width: 200px;"
+                                           validType="length[0,10]"></input>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="input_name">
+                                    <label>图书数量</label>
+                                </td>
+                                <td>
+                                    <input class="easyui-numberbox" type="text" name="bookNum"
+                                           data-options="required:true"  style="width: 200px;"
+                                           validType="length[0,10]"></input>
+                                </td>
+                                <td class="input_name">
+                                    <label>图书类型</label>
+                                </td>
+                                <td>
+                                    <select name="bookType" class="easyui-combobox" data-options="required:true"
+                                            style="width:200px;">
+                                    <#list bookType.valueList as value>
+                                        <option value="${value.id?c}">${value.dictionaryValue}</option>
+                                    </#list>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="input_name"><label>内容简介</label></td>
+                                <td colspan="3">
+                                    <input id="content" name="bookDesc" type="hidden"/>
+                                    <script id="container" type="text/plain"></script>
                                 </td>
                             </tr>
                         </table>
@@ -57,15 +113,24 @@
     </div>
 </div>
 </body>
+<!-- 配置文件 -->
+<script type="text/javascript" src="${base}/static/admin/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="${base}/static/admin/ueditor/ueditor.all.js"></script>
+<link type="text/css" src="${base}/static/admin/ueditor/themes/default/css/ueditor.min.css" rel="stylesheet"/>
 <script>
     $().ready(function () {
-
+        UE.getEditor('container', {
+            initialFrameWidth: parseInt($('.tab_edit').css("width")) * 0.55,
+            initialFrameHeight: 240
+        });
         var $saveButton = $("#saveButton");
         var $editForm = $("#editForm");
         var $cancelButton = $("#cancelButton");
 
         $saveButton.click(function () {
             if ($editForm.form('validate')) {
+                $('#content').val(UE.getEditor('container').getContent());
                 $editForm.submit();
             }
         });

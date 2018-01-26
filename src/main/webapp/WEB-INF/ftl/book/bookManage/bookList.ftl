@@ -6,10 +6,10 @@
 
 <body>
 <div class="wrap">
-<@panel currentId="${currentIds?c}" parentId="3026998">
+<@panel currentId="3027002" parentId="3026998">
 </@panel>
     <div class="con_right">
-    <@topPanel currentId="${currentIds?c}" parentId="3026998">
+    <@topPanel currentId="3027002" parentId="3026998">
     </@topPanel>
         <div class="right_content">
             <div class="table_box">

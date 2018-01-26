@@ -22,6 +22,11 @@ public class BookEntity extends BaseEntity {
     private String bookName;
 
     /*
+    * 图书封面
+    * */
+    private String bookImg;
+
+    /*
     * 作者
     * */
     private String bookAuthor;
@@ -37,20 +42,30 @@ public class BookEntity extends BaseEntity {
     private BigDecimal bookMoney;
 
     /*
-    * 图书类型，无需持久化字段
+    * 图书类型
     * */
-    private String bookType;
+    private Long bookType;
 
     /*
     * 图书数量
     * */
     private Integer bookNum;
 
+    /*
+    * 图书简介
+    * */
+    private String bookDesc;
+
+    /*
+    * 图书类型，无需持久化对象
+    * */
+    private String bookTypeText;
+
     public String getBookId() {
         return bookId;
     }
 
-    public void setBookId(String bookId) {
+    public void setBookId(final String bookId) {
         this.bookId = bookId;
     }
 
@@ -58,7 +73,7 @@ public class BookEntity extends BaseEntity {
         return bookName;
     }
 
-    public void setBookName(String bookName) {
+    public void setBookName(final String bookName) {
         this.bookName = bookName;
     }
 
@@ -66,7 +81,7 @@ public class BookEntity extends BaseEntity {
         return bookAuthor;
     }
 
-    public void setBookAuthor(String bookAuthor) {
+    public void setBookAuthor(final String bookAuthor) {
         this.bookAuthor = bookAuthor;
     }
 
@@ -74,7 +89,7 @@ public class BookEntity extends BaseEntity {
         return bookPublishing;
     }
 
-    public void setBookPublishing(String bookPublishing) {
+    public void setBookPublishing(final String bookPublishing) {
         this.bookPublishing = bookPublishing;
     }
 
@@ -82,15 +97,15 @@ public class BookEntity extends BaseEntity {
         return bookMoney;
     }
 
-    public void setBookMoney(BigDecimal bookMoney) {
+    public void setBookMoney(final BigDecimal bookMoney) {
         this.bookMoney = bookMoney;
     }
 
-    public String getBookType() {
+    public Long getBookType() {
         return bookType;
     }
 
-    public void setBookType(String bookType) {
+    public void setBookType(final Long bookType) {
         this.bookType = bookType;
     }
 
@@ -98,7 +113,31 @@ public class BookEntity extends BaseEntity {
         return bookNum;
     }
 
-    public void setBookNum(Integer bookNum) {
+    public void setBookNum(final Integer bookNum) {
         this.bookNum = bookNum;
+    }
+
+    public String getBookDesc() {
+        return bookDesc;
+    }
+
+    public void setBookDesc(final String bookDesc) {
+        this.bookDesc = bookDesc;
+    }
+
+    public String getBookImg() {
+        return bookImg;
+    }
+
+    public void setBookImg(final String bookImg) {
+        this.bookImg = bookImg;
+    }
+
+    public String getBookTypeText() {
+        return bookTypeText;
+    }
+
+    public void setBookTypeText(final String bookTypeText) {
+        this.bookTypeText = bookTypeText;
     }
 }

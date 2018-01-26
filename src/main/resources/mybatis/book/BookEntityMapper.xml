@@ -7,6 +7,9 @@
         <result property="bookId" column="book_id" jdbcType="VARCHAR"></result>
         <result property="bookName" column="book_name" jdbcType="VARCHAR"></result>
         <result property="bookAuthor" column="book_author" jdbcType="VARCHAR"></result>
+        <result property="bookImg" column="book_img" jdbcType="VARCHAR"></result>
+        <result property="bookType" column="book_type" jdbcType="BIGINT"></result>
+        <result property="bookDesc" column="book_desc" jdbcType="LONGVARCHAR"></result>
         <result property="bookPublishing" column="book_publishing" jdbcType="VARCHAR"></result>
         <result property="bookMoney" column="book_money" jdbcType="DECIMAL"></result>
         <result property="bookNum" column="book_num" jdbcType="INTEGER"></result>
@@ -22,6 +25,7 @@
         </association>
     </resultMap>
 
+    <!--分页查询图书信息-->
     <select id="findPageBook" parameterType="com.zzw.book.entity.BookEntity" resultMap="BookResultMap">
         SELECT * from b_book
         where 1=1
@@ -41,4 +45,20 @@
         </if>
         ORDER BY book_name ASC
     </select>
+
+    <!--添加图书-->
+    <insert id="insertBook" parameterType="com.zzw.book.entity.BookEntity" useGeneratedKeys="true" keyProperty="id">
+        insert into b_book(
+        book_id,book_name,book_img,
+        book_author,book_publishing,
+        book_money,book_type,book_num,
+        book_desc,create_user,create_date)
+        values
+        (
+        #{bookId,jdbcType=BIGINT},#{bookName,jdbcType=VARCHAR},#{bookImg,jdbcType=VARCHAR},
+        #{bookAuthor,jdbcType=VARCHAR},#{bookPublishing,jdbcType=VARCHAR},#{bookMoney,jdbcType=DECIMAL},
+        #{bookType,jdbcType=BIGINT},#{bookNum,jdbcType=INTEGER},#{bookDesc,jdbcType=LONGVARCHAR},
+        #{createUser.id,jdbcType=BIGINT},NOW()
+        )
+    </insert>
 </mapper>
