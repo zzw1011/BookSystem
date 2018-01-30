@@ -6,17 +6,16 @@
 
 <body>
 <div class="wrap">
-<@panel currentId="3027002" parentId="3026998">
+<@panel currentId="${currentIds?c}" parentId="3026998">
 </@panel>
     <div class="con_right">
-    <@topPanel currentId="3027002" parentId="3026998">
+    <@topPanel currentId="${currentIds?c}" parentId="3026998">
     </@topPanel>
         <div class="right_content">
             <div class="table_box">
                 <div class="table_head">
                     <i></i>
-                    <span>图书列表</span>
-                    <input id="addButton" class="right_btn" type="button" value="新增"/>
+                    <span>图书借阅</span>
                 </div>
                 <div class="table_con clearfix">
                     <div class="search_box">
@@ -33,8 +32,7 @@
                             </select>
                             <input id="searchButton" onclick="initBookLists();" type="button" value="搜索"/>
                         </div>
-                        <table class="easyui-datagrid" style="width:100%;height:auto"
-                               id="Booksdg">
+                        <table class="easyui-datagrid" style="width:100%;height:auto" id="Booksdg">
                         </table>
                     </div>
                 </div>
@@ -45,19 +43,11 @@
 <script>
 
     $(function () {
-        var $addButton = $("#addButton");
-        var $deleteButton = $("#deleteButton");
-        var $editButton = $("#editButton");
         initBookLists();
         $(window).resize(function () {
             $('#Booksdg').datagrid('resize');
             initBookLists();
         });
-
-        $addButton.click(function () {
-            window.location.href = "add.do";
-        });
-
     });
 
     function initBookLists() {
@@ -89,7 +79,7 @@
                 }
                 },
                 {field:'bookPublishing',title:'出版社', align:'center',width: 100},
-                {field:'_operate',title:'操作', align:'center',formatter:formatEditAndDelAndView ,width: 80}
+                {field:'_operate',title:'操作', align:'center',formatter:formatView ,width: 80}
             ]],
             toolbar: '#tb',
         });
@@ -110,18 +100,6 @@
         else {
             var id = rows[0].id;
             window.location.href = "detail.do?id=" + id;
-        }
-    }
-
-    function editDatagrid(index) {
-        $("#Booksdg").datagrid('selectRow', index);
-        var rows = $("#Booksdg").datagrid('getSelections');
-        if (rows.length == 0 || rows.length > 1) {
-            $.messager.alert('Tips', '请选择一条记录进行修改！', 'info');
-        }
-        else {
-            var id = rows[0].id;
-            window.location.href = "edit.do?id=" + id;
         }
     }
 </script>

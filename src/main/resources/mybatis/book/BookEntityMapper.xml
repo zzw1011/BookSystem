@@ -25,6 +25,10 @@
         </association>
     </resultMap>
 
+    <select id="getBookById"  parameterType="java.lang.Long" resultMap="BookResultMap">
+        SELECT * FROM b_book
+         where id = #{id,jdbcType=BIGINT}
+    </select>
     <!--分页查询图书信息-->
     <select id="findPageBook" parameterType="com.zzw.book.entity.BookEntity" resultMap="BookResultMap">
         SELECT * from b_book
@@ -43,6 +47,9 @@
         <if test="bookId !=null and bookId !='' ">
             and book_id = #{bookId}
         </if>
+        <if test="bookType !=null and bookType != 0 ">
+            and book_type = #{bookType}
+        </if>
         ORDER BY book_name ASC
     </select>
 
@@ -55,10 +62,46 @@
         book_desc,create_user,create_date)
         values
         (
-        #{bookId,jdbcType=BIGINT},#{bookName,jdbcType=VARCHAR},#{bookImg,jdbcType=VARCHAR},
+        #{bookId,jdbcType=VARCHAR},#{bookName,jdbcType=VARCHAR},#{bookImg,jdbcType=VARCHAR},
         #{bookAuthor,jdbcType=VARCHAR},#{bookPublishing,jdbcType=VARCHAR},#{bookMoney,jdbcType=DECIMAL},
         #{bookType,jdbcType=BIGINT},#{bookNum,jdbcType=INTEGER},#{bookDesc,jdbcType=LONGVARCHAR},
         #{createUser.id,jdbcType=BIGINT},NOW()
         )
     </insert>
+
+    <update id="updateBookSelective" parameterType="com.zzw.book.entity.BookEntity" useGeneratedKeys="true" keyProperty="id">
+        UPDATE b_book
+        <set>
+            <if test="bookId !=null and bookId !='' ">
+                book_id = #{bookId,jdbcType=VARCHAR},
+            </if>
+            <if test="bookName !=null and bookName !=''">
+                book_name = #{bookName,jdbcType=VARCHAR},
+            </if>
+            <if test="bookImg !=null and bookImg !='' ">
+                book_img = #{bookImg,jdbcType=VARCHAR},
+            </if>
+            <if test="bookAuthor !=null and bookAuthor !='' ">
+                book_author = #{bookAuthor,jdbcType=VARCHAR},
+            </if>
+            <if test="bookPublishing !=null and bookPublishing !=''">
+                book_publishing = #{bookPublishing,jdbcType=VARCHAR},
+            </if>
+            <if test="bookMoney !=null and bookMoney !='' ">
+                book_money =#{bookMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="bookType !=null and bookType !=0 ">
+                book_type = #{bookType,jdbcType=BIGINT},
+            </if>
+            <if test="bookNum !=null and bookNum !='' ">
+                book_num = #{bookNum,jdbcType=INTEGER},
+            </if>
+            <if test="bookDesc !=null and bookDesc !='' ">
+                book_desc = #{bookDesc,jdbcType=LONGVARCHAR},
+            </if>
+              update_user = #{updateUser.id,jdbcType=BIGINT},
+              update_date = NOW()
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
 </mapper>

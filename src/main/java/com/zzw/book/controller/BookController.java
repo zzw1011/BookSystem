@@ -8,6 +8,7 @@ import com.zzw.base.model.PageQuery;
 import com.zzw.base.service.UserService;
 import com.zzw.base.utils.DictionaryUtils;
 import com.zzw.base.utils.FileUtil;
+import com.zzw.base.utils.SysParamUtils;
 import com.zzw.book.entity.BookEntity;
 import com.zzw.book.service.BookService;
 import org.apache.commons.logging.Log;
@@ -55,7 +56,8 @@ public class BookController extends BaseController {
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public String list(ModelMap model,Long currentIds){
         model.addAttribute("currentIds", currentIds);
-        return "/book/bookManage/list";
+        model.addAttribute("bookType",   DictionaryUtils.getDictionaryByKey("bookType"));
+        return "book/bookManage/BorrowList";
     }
 
     /*
@@ -73,6 +75,7 @@ public class BookController extends BaseController {
     * */
     @RequestMapping(value = "/bookList",method = RequestMethod.GET)
     public String bookList(ModelMap model){
+        model.addAttribute("bookType",   DictionaryUtils.getDictionaryByKey("bookType"));
         return "/book/bookManage/bookList";
     }
 
@@ -87,6 +90,14 @@ public class BookController extends BaseController {
         result.put("total", page.getTotal());
         result.put("rows", page.getList());
         return result;
+    }
+
+    @RequestMapping(value = "/edit" ,method = RequestMethod.GET)
+    public String edit(Long id,ModelMap model){
+        model.addAttribute("bookType",   DictionaryUtils.getDictionaryByKey("bookType"));
+        model.addAttribute("bookEntity", bookService.getById(id));
+        model.put("fileUrlPre", SysParamUtils.getString("filesUrlpre"));
+        return "/book/bookManage/edit";
     }
      /*
      * 添加图书
